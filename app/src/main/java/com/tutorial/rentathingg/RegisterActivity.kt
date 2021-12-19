@@ -27,6 +27,7 @@ import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.firebase.auth.ktx.auth
+import com.google.firebase.auth.ktx.userProfileChangeRequest
 import com.google.firebase.ktx.Firebase
 
 
@@ -179,13 +180,28 @@ fun RegisterPage(navController: NavController) {
                             modifier = Modifier.fillMaxWidth(),
                             shape = RoundedCornerShape(16.dp),
                             onClick = {
+                                // create user
                                 auth.createUserWithEmailAndPassword(
                                     emailValue.trim(),
                                     passwordValue.trim()
                                 )
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
-                                            Log.d("AUTH", "Success!")
+                                            Log.d("AUTH", "Successfully created user!")
+
+                                            // adding username to profile
+                                            val user = Firebase.auth.currentUser
+                                            val profileUpdates = userProfileChangeRequest {
+                                                displayName = usernameValue
+                                            }
+                                            user!!.updateProfile(profileUpdates)
+                                                .addOnCompleteListener { task ->
+                                                    if (task.isSuccessful) {
+                                                        Log.d("AUTH", "User profile updated.")
+                                                    } else {
+                                                        Log.d("AUTH", "Failed to update user")
+                                                    }
+                                                }
                                             navController.navigate("Home")
                                         } else {
                                             Log.d("AUTH", "Failed ${task.exception}")
