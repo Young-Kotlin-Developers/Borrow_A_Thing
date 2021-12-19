@@ -21,7 +21,7 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        WindowCompat.setDecorFitsSystemWindows(window,false)
+        WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             RentAThinggTheme {
 
@@ -45,12 +45,16 @@ class MainActivity : ComponentActivity() {
                                 SplashScreen(navController)
 
                             }
-
-                            composable("home") {
+                            composable("SigIn") {
 
                                 SignInScreen(navController)
+                            }
+                            composable("Register") {
+
+                                RegisterPage(navController)
 
                             }
+
                         }
                     }
                 }
@@ -58,6 +62,7 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
+
 
 @Composable
 fun Greeting(name: String) {

@@ -36,7 +36,8 @@ fun SplashScreen(navController: NavController) {
         )
         // Customize the delay time
         delay(3000L)
-        navController.navigate("home")
+        //nav wie gdzie ma Register
+        navController.navigate("Register")
     }
 
     // Image
