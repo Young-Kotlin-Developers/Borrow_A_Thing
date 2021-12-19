@@ -179,7 +179,9 @@ fun RegisterPage(navController: NavController) {
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            TextButton(onClick = {}) {
+                            TextButton(onClick = {
+                                navController.navigate("SigIn")
+                            }) {
                                 Text(text = "back")
                             }
                         }

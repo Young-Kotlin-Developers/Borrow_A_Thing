@@ -118,7 +118,9 @@ fun SignInScreen(navController: NavController) {
                             modifier = Modifier.fillMaxWidth(),
                             horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            TextButton(onClick = {}) {
+                            TextButton(onClick = {
+                                navController.navigate("Register")
+                            }) {
                                 Text(text = "Sign Up")
                             }
 
