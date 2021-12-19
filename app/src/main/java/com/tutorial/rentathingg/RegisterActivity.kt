@@ -1,4 +1,8 @@
 package com.tutorial.rentathingg
+
+import android.content.Intent
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,29 +23,33 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startActivity
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 
 @Composable
 fun RegisterPage(navController: NavController) {
-    var username by remember {
+    val auth = Firebase.auth
+    var usernameValue by remember {
         mutableStateOf("")
     }
-    var emailaddress by remember {
+    var emailValue by remember {
         mutableStateOf("")
     }
-    var password by remember {
+    var passwordValue by remember {
         mutableStateOf("")
     }
-    var confirmpassword by remember {
+    var confirmPasswordValue by remember {
         mutableStateOf("")
     }
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
     val isFormValid by derivedStateOf {
-        username.isNotBlank() && emailaddress.isNotBlank() && password.length >= 7 && confirmpassword.length >= 7
+        usernameValue.isNotBlank() && emailValue.isNotBlank() && passwordValue.length >= 7 && confirmPasswordValue.length >= 7
 
 
     }
@@ -86,13 +94,13 @@ fun RegisterPage(navController: NavController) {
                         Spacer(modifier = Modifier.weight(1f))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = username,
-                            onValueChange = { username = it },
+                            value = usernameValue,
+                            onValueChange = { usernameValue = it },
                             label = { Text(text = "Username") },
                             singleLine = true,
                             trailingIcon = {
-                                if (username.isNotBlank())
-                                    IconButton(onClick = { username = "" }) {
+                                if (usernameValue.isNotBlank())
+                                    IconButton(onClick = { usernameValue = "" }) {
                                         Icon(
                                             imageVector = Icons.Filled.Clear,
                                             contentDescription = ""
@@ -104,26 +112,26 @@ fun RegisterPage(navController: NavController) {
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = emailaddress,
-                            onValueChange = { emailaddress = it },
+                            value = emailValue,
+                            onValueChange = { emailValue = it },
                             label = { Text(text = "Email Address") },
                             singleLine = true,
                             trailingIcon = {
-                                if (emailaddress.isNotBlank())
-                                    IconButton(onClick = { emailaddress = "" }) {
+                                if (emailValue.isNotBlank())
+                                    IconButton(onClick = { emailValue = "" }) {
                                         Icon(
                                             imageVector = Icons.Filled.Clear,
                                             contentDescription = ""
                                         )
-                                }
+                                    }
                             }
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = password,
-                            onValueChange = { password = it },
+                            value = passwordValue,
+                            onValueChange = { passwordValue = it },
                             label = { Text(text = "Password") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
@@ -145,8 +153,8 @@ fun RegisterPage(navController: NavController) {
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = confirmpassword,
-                            onValueChange = { confirmpassword = it },
+                            value = confirmPasswordValue,
+                            onValueChange = { confirmPasswordValue = it },
                             label = { Text(text = "Confirm Password") },
                             singleLine = true,
                             keyboardOptions = KeyboardOptions(
@@ -167,10 +175,23 @@ fun RegisterPage(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(12.dp))
                         Button(
-                            onClick = {},
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            onClick = {
+                                auth.createUserWithEmailAndPassword(
+                                    emailValue.trim(),
+                                    passwordValue.trim()
+                                )
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Log.d("AUTH", "Success!")
+                                            navController.navigate("Home")
+                                        } else {
+                                            Log.d("AUTH", "Failed ${task.exception}")
+                                        }
+                                    }
+                            }
                         ) {
                             Text(text = "Sign up")
                         }

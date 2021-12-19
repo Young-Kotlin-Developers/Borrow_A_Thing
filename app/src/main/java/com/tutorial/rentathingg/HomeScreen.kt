@@ -23,12 +23,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.navigation.NavController
 import com.tutorial.rentathingg.ui.theme.MainColor
 import kotlinx.coroutines.launch
 
-@ExperimentalFoundationApi
 @Composable
-fun HomeScreen() {
+fun HomeScreen(navController: NavController) {
     Box(modifier = Modifier
         .background(Color.White)
         .fillMaxSize()

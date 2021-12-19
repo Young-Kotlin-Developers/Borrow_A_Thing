@@ -1,5 +1,7 @@
 package com.tutorial.rentathingg
 
+import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -22,29 +24,33 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.firebase.auth.ktx.auth
+import com.google.firebase.ktx.Firebase
 
 @Composable
 
 fun SignInScreen(navController: NavController) {
-    var username by remember {
+    var emailValue by remember {
         mutableStateOf("")
     }
-    var password by remember {
+    var passwordValue by remember {
         mutableStateOf("")
     }
     var isPasswordVisible by remember {
         mutableStateOf(false)
     }
     val isFormValid by derivedStateOf {
-        username.isNotBlank() && password.length >= 7
+        emailValue.isNotBlank() && passwordValue.length >= 7
     }
+    val auth = Firebase.auth
 
     Scaffold(backgroundColor = MaterialTheme.colors.primary) {
         Column(
             Modifier
                 .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Top) {
+            verticalArrangement = Arrangement.Top
+        ) {
 
             Image(
                 painterResource(id = R.drawable.ic_logo),
@@ -53,8 +59,6 @@ fun SignInScreen(navController: NavController) {
                     .padding(8.dp)
                     .weight(3f)
                     .size(190.dp)
-
-
             )
             Card(
                 Modifier
@@ -65,35 +69,43 @@ fun SignInScreen(navController: NavController) {
             ) {
                 Column(
                     Modifier
-
                         .fillMaxSize()
-
                         .padding(32.dp)
                 ) {
                     Text(text = "Welcome Back!", fontWeight = FontWeight.Bold, fontSize = 32.sp)
-                    Column(Modifier.fillMaxSize(), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+                    Column(
+                        Modifier.fillMaxSize(),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
                         Spacer(modifier = Modifier.weight(1f))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = username,
-                            onValueChange = { username = it },
-                            label = { Text(text = "Username") },
+                            value = emailValue,
+                            onValueChange = { emailValue = it },
+                            label = { Text(text = "Email") },
                             singleLine = true,
                             trailingIcon = {
-                                if (username.isNotBlank())
-                                    IconButton(onClick = { username = "" }) {
-                                        Icon(imageVector = Icons.Filled.Clear, contentDescription = "")
+                                if (emailValue.isNotBlank())
+                                    IconButton(onClick = { emailValue = "" }) {
+                                        Icon(
+                                            imageVector = Icons.Filled.Clear,
+                                            contentDescription = ""
+                                        )
                                     }
                             }
                         )
                         Spacer(modifier = Modifier.height(8.dp))
                         OutlinedTextField(
                             modifier = Modifier.fillMaxWidth(),
-                            value = password,
-                            onValueChange = { password = it },
+                            value = passwordValue,
+                            onValueChange = { passwordValue = it },
                             label = { Text(text = "Password") },
                             singleLine = true,
-                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Password, imeAction = ImeAction.Done),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Password,
+                                imeAction = ImeAction.Done
+                            ),
                             visualTransformation = if (isPasswordVisible) VisualTransformation.None else PasswordVisualTransformation(),
                             trailingIcon = {
                                 IconButton(onClick = { isPasswordVisible = !isPasswordVisible }) {
@@ -106,10 +118,20 @@ fun SignInScreen(navController: NavController) {
                         )
                         Spacer(modifier = Modifier.height(16.dp))
                         Button(
-                            onClick = {},
                             enabled = isFormValid,
                             modifier = Modifier.fillMaxWidth(),
-                            shape = RoundedCornerShape(16.dp)
+                            shape = RoundedCornerShape(16.dp),
+                            onClick = {
+                                auth.signInWithEmailAndPassword(emailValue, passwordValue)
+                                    .addOnCompleteListener { task ->
+                                        if (task.isSuccessful) {
+                                            Log.d("AUTH", "Login successful")
+                                            navController.navigate("Home")
+                                        } else {
+                                            Log.d("AUTH", "Unable to login. Check your input or try again later")
+                                        }
+                                    }
+                            }
                         ) {
                             Text(text = "Log In")
                         }

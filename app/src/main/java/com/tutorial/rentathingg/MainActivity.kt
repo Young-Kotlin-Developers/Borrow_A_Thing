@@ -41,20 +41,17 @@ class MainActivity : ComponentActivity() {
 
 
                             composable("splash") {
-
                                 SplashScreen(navController)
-
                             }
                             composable("SigIn") {
-
                                 SignInScreen(navController)
                             }
                             composable("Register") {
-
                                 RegisterPage(navController)
-
                             }
-
+                            composable("Home") {
+                                HomeScreen(navController)
+                            }
                         }
                     }
                 }
