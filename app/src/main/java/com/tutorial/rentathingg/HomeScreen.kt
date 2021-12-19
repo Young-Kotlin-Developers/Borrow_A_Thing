@@ -23,8 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tutorial.rentathingg.ui.theme.Teal200
-import com.tutorial.rentathingg.ui.theme.myPurple
+import com.tutorial.rentathingg.ui.theme.MainColor
 import kotlinx.coroutines.launch
 
 @ExperimentalFoundationApi
@@ -152,7 +151,7 @@ fun SearchSection() {
             )
             Spacer(modifier = Modifier.height(20.dp))
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = myPurple, contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors(backgroundColor = MainColor, contentColor = Color.White),
                 onClick = {
                 /* TODO Dodać wyszukiwanie wedlug wpisanych wartosci */
                 scope.launch {
