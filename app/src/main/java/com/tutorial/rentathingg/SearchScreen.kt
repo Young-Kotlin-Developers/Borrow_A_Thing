@@ -54,7 +54,7 @@ fun SearchScreen(navController: NavController) {
                 Column(
                     Modifier
                         .fillMaxSize()
-                        .padding(top = 55.dp,start = 15.dp, end = 15.dp, bottom = 15.dp)
+                        .padding(top = 55.dp, start = 15.dp, end = 15.dp, bottom = 15.dp)
                 ) {
                     Button(
                         shape = RoundedCornerShape(90.dp),
@@ -217,36 +217,42 @@ fun SearchScreen(navController: NavController) {
 
 @Composable
 fun Swich1() {
-    val checkedState = remember { mutableStateOf(true) }
+    val checkedState = remember { mutableStateOf(false) }
     Row(
         modifier = Modifier
             .fillMaxWidth()
-        .padding(top = 15.dp,end = 15.dp),
+            .padding(top = 15.dp),
     ) {
-        Text(
+        Column(
+            Modifier
+                .height(200.dp)
+                .width(320.dp)
+        ) {
+            Text(
 
-            text = "Wyrażam zgodę na przetwarzanie moich \n" +
-                    "danych osobowych w postaci podanego \n" +
-                    "przeze mnie numeru telefonu przez \n" +
-                    "NASZA FIRMA w celu przesyłania informacji" +
-                    " handlowych oraz prowadzenia działań " +
-                    "marketingowych przy użyciu telekomunikacyjnych urządzeń końcowych \n" +
-                    " oraz automatycznych systemów \n" +
-                    "wywołujących w rozumieniu ustawy Prawo \n" +
-                    " telekomunikacyjne.",
-        )
+                text = "Wyrażam zgodę na przetwarzanie moich " +
+                        "danych osobowych w postaci podanego " +
+                        "przeze mnie numeru telefonu przez " +
+                        "NASZA FIRMA w celu przesyłania  " +
+                        "informacji handlowych oraz prowadzenia działań " +
+                        "marketingowych przy użyciu telekomunikacyjnych urządzeń końcowych " +
+                        " oraz automatycznych systemów " +
+                        "wywołujących w rozumieniu ustawy Prawo " +
+                        " telekomunikacyjne.",
+            )
+        }
         Row(
             Modifier
                 .fillMaxSize()
-                .padding(top = 65.dp),
+                .padding(top = 80.dp),
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Switch(
                 checked = checkedState.value,
                 onCheckedChange = { checkedState.value = it },
                 colors = SwitchDefaults.colors(
+                    uncheckedThumbColor = Color(0xff6162F5),
                     checkedThumbColor = Color(0xffEE4367),
-                    uncheckedThumbColor =Color(0xff6162F5)
                 )
             )
         }
