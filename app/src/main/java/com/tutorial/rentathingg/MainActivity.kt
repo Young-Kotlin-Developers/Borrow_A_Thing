@@ -50,7 +50,7 @@ class MainActivity : ComponentActivity() {
                                 RegisterPage(navController)
                             }
                             composable("Home") {
-                                HomeScreen(navController)
+                                SearchScreen(navController)
                             }
                         }
                     }
