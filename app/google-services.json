@@ -1,6 +1,7 @@
 {
   "project_info": {
     "project_number": "574064690352",
+    "firebase_url": "https://borrowathing-default-rtdb.europe-west1.firebasedatabase.app",
     "project_id": "borrowathing",
     "storage_bucket": "borrowathing.appspot.com"
   },
