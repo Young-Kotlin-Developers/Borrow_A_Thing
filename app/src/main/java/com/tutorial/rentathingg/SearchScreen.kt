@@ -508,8 +508,8 @@ fun Swich1() {
                         " telekomunikacyjne.",
             )
             //TU POWINIEN BYĆ ZAMKNIECIE COLUMNY
-            //       }
-            Row(
+                   }
+           Row(
                 Modifier
                     .fillMaxSize()
                     .padding(top = 65.dp),
@@ -525,5 +525,6 @@ fun Swich1() {
                 )
             }
         }
-    }
+//    }
 }
+

@@ -68,16 +68,19 @@ dependencies {
     debugImplementation "androidx.compose.ui:ui-tooling:$compose_version"
     debugImplementation "androidx.compose.ui:ui-test-manifest:$compose_version"
 
+    // Navigation components for compose
+    implementation("androidx.navigation:navigation-compose:2.4.0-alpha04")
     // For statusbar & navigation bar padding/height/width
     implementation "com.google.accompanist:accompanist-insets:0.12.0"
     implementation "com.google.accompanist:accompanist-insets-ui:0.12.0"
-    //biblioteka do icon
-    implementation "androidx.compose.material:material-icons-extended:$compose_version"
-
     // firebase
     implementation platform('com.google.firebase:firebase-bom:29.0.2')
     implementation 'com.google.firebase:firebase-analytics-ktx'
 //    implementation 'com.google.firebase:firebase-auth:21.0.1'
     implementation 'com.google.firebase:firebase-auth-ktx:21.0.1'
     implementation 'com.google.firebase:firebase-storage-ktx'
+    // Image Loading Library
+    implementation "com.google.accompanist:accompanist-coil:0.12.0"
+    // Material extended icons
+    implementation "androidx.compose.material:material-icons-extended:$compose_version"
 }
