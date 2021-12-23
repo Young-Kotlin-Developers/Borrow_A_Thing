@@ -38,11 +38,12 @@ fun writeNewItem(
     detail: String,
     description: String,
     phoneNum: String,
+    value: String,
     author: String
 ) {
     lateinit var database: DatabaseReference
     database = Firebase.database.reference
-    val item = Item(title, category, detail, description, phoneNum, author)
+    val item = Item(title, category, detail, description, phoneNum, value, author)
 
     val id = FirebaseDatabase.getInstance().getReference("items").push().key
     if (id != null) {
@@ -57,9 +58,10 @@ fun SearchScreen(navController: NavController) {
     var details = remember { TextFieldState() }
     var description = remember { TextFieldState() }
     var phoneNumber = remember { TextFieldState() }
+    var value = remember { TextFieldState() }
 
     val isFormValid by derivedStateOf {
-        title.isNotBlank() && details.text.isNotBlank() && description.text.isNotBlank() && phoneNumber.text.length > 8
+        title.isNotBlank() && details.text.isNotBlank() && description.text.isNotBlank() && phoneNumber.text.length > 8 && value.text.length > 1
     }
 
     val categoryItems = listOf("Tools", "Electronics", "Cars", "Books")
@@ -217,6 +219,17 @@ fun SearchScreen(navController: NavController) {
                                 ) {
                                     Phone_number(phoneNumber)
                                 }
+                                Text(
+                                    text = "value",
+                                    fontWeight = FontWeight.Light,
+                                    fontSize = 17.sp
+                                )
+                                Column(
+                                    Modifier
+                                        .fillMaxWidth()
+                                ) {
+                                    Value(value)
+                                }
                                 Column(
                                     Modifier
                                         .fillMaxSize(),
@@ -257,6 +270,7 @@ fun SearchScreen(navController: NavController) {
                                                     details.text,
                                                     description.text,
                                                     phoneNumber.text,
+                                                    value.text,
                                                     username
                                                 )
                                             }
@@ -341,7 +355,7 @@ fun ComposeMenu(
         }
     }
 }
-
+/*
 @Composable
 fun DropDownMenu(selectedText: String, onInputChanged: (String) -> Unit) {
 
@@ -390,6 +404,7 @@ fun DropDownMenu(selectedText: String, onInputChanged: (String) -> Unit) {
     }
 }
 
+ */
 @Composable
 fun Description(description: TextFieldState = remember { TextFieldState() }) {
     val maxChar = 5000
@@ -407,6 +422,32 @@ fun Description(description: TextFieldState = remember { TextFieldState() }) {
         trailingIcon = {
             if (description.text.isNotBlank())
                 IconButton(onClick = { description.text = "" }) {
+                    Icon(
+                        imageVector = Icons.Filled.Clear,
+                        contentDescription = ""
+                    )
+                }
+        }
+    )
+}
+
+@Composable
+fun Value(phoneNumber: TextFieldState = remember { TextFieldState() }) {
+    val maxChar = 5
+
+    OutlinedTextField(
+        modifier = Modifier.fillMaxWidth(),
+        value = phoneNumber.text,
+        onValueChange = {
+            if (it.length < maxChar) {
+                phoneNumber.text = it
+            }
+        },
+        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
+        singleLine = true,
+        trailingIcon = {
+            if (phoneNumber.text.isNotBlank())
+                IconButton(onClick = { phoneNumber.text = "" }) {
                     Icon(
                         imageVector = Icons.Filled.Clear,
                         contentDescription = ""
@@ -466,6 +507,8 @@ fun Swich1() {
                         "wywołujących w rozumieniu ustawy Prawo " +
                         " telekomunikacyjne.",
             )
+            //TU POWINIEN BYĆ ZAMKNIECIE COLUMNY
+            //       }
             Row(
                 Modifier
                     .fillMaxSize()

@@ -6,6 +6,7 @@ data class Item(
     val detail: String? = null,
     val description: String? = null,
     val phoneNum: String? = null,
+    val value: String? = null,
     val author: String?
 ) {
     // Null default values create a no-argument default constructor, which is needed
