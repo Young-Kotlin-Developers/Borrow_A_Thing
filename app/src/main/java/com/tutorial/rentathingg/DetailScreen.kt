@@ -84,15 +84,6 @@ fun Photoadapter(navController: NavController) {
                 navController.popBackStack()
             }
 
-            TopButton(
-                imageVector = Icons.Default.BookmarkBorder,
-                modifier = Modifier
-                    .align(Alignment.TopEnd)
-                    .padding(16.dp)
-            ) {
-
-            }
-
         }
 
 
@@ -122,26 +113,11 @@ fun Infoproduct() {
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
-        Divider(
-            color = Color(0xFFECECEE),
-            modifier = Modifier.padding(8.dp)
+        Text(
+            text = "20 zł",
+            fontWeight = FontWeight.Normal,
+            fontSize = 18.sp
         )
-        Row(
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
-
-            TextDataItem(
-                imageVector = Icons.Default.Person,
-                title = "Person",
-                subtitle = "Andrzej"
-            )
-
-            TextDataItem(
-                imageVector = Icons.Default.AttachMoney,
-                title = "Cost",
-                subtitle = "20zł"
-            )
-        }
         Divider(
             color = Color(0xFFECECEE),
             modifier = Modifier.padding(8.dp)
@@ -203,42 +179,6 @@ fun TextContent(day: TextData) {
 
     }
 
-}
-
-
-@Composable
-fun TextDataItem(imageVector: ImageVector, title: String, subtitle: String) {
-
-    Row {
-
-        Icon(
-            modifier = Modifier
-                .padding(8.dp)
-                .clip(CircleShape)
-                .background(Color(0xffEE4367))
-                .size(32.dp)
-                .padding(8.dp),
-
-
-
-            imageVector = imageVector, contentDescription = ""
-        )
-
-        Column {
-
-            Text(
-                text = title,
-                fontSize = 12.sp,
-                fontWeight = FontWeight.Bold
-            )
-
-            Text(
-                text = subtitle,
-                fontSize = 14.sp,
-                fontWeight = FontWeight.Normal
-            )
-        }
-    }
 }
 
 @Composable

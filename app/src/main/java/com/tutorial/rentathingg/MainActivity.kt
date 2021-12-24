@@ -52,6 +52,9 @@ class MainActivity : ComponentActivity() {
                             composable("Home") {
                                 SearchScreen(navController)
                             }
+                            composable("Detail") {
+                                DetailScreen(navController)
+                            }
                         }
                     }
                 }
