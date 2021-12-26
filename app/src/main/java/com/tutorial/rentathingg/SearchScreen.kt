@@ -1,6 +1,17 @@
 package com.tutorial.rentathingg
 
+import android.graphics.Bitmap
+import android.graphics.ImageDecoder
+import android.net.Uri
+import android.os.Build
+import android.provider.MediaStore
+import android.util.Log
+import android.widget.Toast
+import androidx.activity.ComponentActivity
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.*
+import androidx.compose.foundation.R
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
@@ -16,7 +27,9 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.material.icons.filled.*
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.toSize
@@ -27,9 +40,59 @@ import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
 import com.google.firebase.ktx.Firebase
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageMetadata
+import com.google.firebase.storage.ktx.storage
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.io.ByteArrayOutputStream
 
 class TextFieldState() {
     var text: String by mutableStateOf("")
+}
+
+fun compressImage(context: ComponentActivity, uri: Uri): Uri? {
+    val bitmap = if (Build.VERSION.SDK_INT < 28) {
+        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
+    } else {
+        val source = ImageDecoder.createSource(context.contentResolver, uri)
+        ImageDecoder.decodeBitmap(source)
+    }
+    val bytes = ByteArrayOutputStream()
+    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, bytes)
+    val path: String = MediaStore.Images.Media.insertImage(
+        context.contentResolver, bitmap, "Title", null
+    )
+    return Uri.parse(path)
+}
+
+private suspend fun uploadPhoto(
+    uri: Uri,
+    name: String,
+    mimeType: String?,
+    callback: (url: String) -> Unit
+) {
+    val storage = FirebaseStorage.getInstance()
+    val storageRef = storage.reference
+    val fileRef = storageRef.child("images/$name")
+
+    val metadata = mimeType?.let {
+        StorageMetadata.Builder()
+            .setContentType(mimeType)
+            .build()
+    }
+
+    if (metadata != null) {
+        fileRef.putFile(uri, metadata)
+//        fileRef.putFile(uri, metadata).await()
+    } else {
+        fileRef.putFile(uri)
+//        fileRef.putFile(uri).await()
+    }
+
+    callback(fileRef.downloadUrl.toString())
+//    callback(fileRef.downloadUrl.await().toString())
 }
 
 fun writeNewItem(
@@ -68,6 +131,15 @@ fun SearchScreen(navController: NavController) {
     var categoriesExpanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
 
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
+    val context = LocalContext.current
+    val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    val launcher =
+        rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
+            imageUri = uri
+        }
+
     Scaffold(backgroundColor = MaterialTheme.colors.primary) {
         Column(
             Modifier
@@ -91,7 +163,7 @@ fun SearchScreen(navController: NavController) {
                         shape = RoundedCornerShape(90.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                         onClick = {
-//                            navController.navigate("home")//podpiać do home
+                            //TODO: navController.navigate("home") - PODPIAC DO HOME
                         }
                     ) {
                         Icon(
@@ -120,19 +192,30 @@ fun SearchScreen(navController: NavController) {
                                 fontWeight = FontWeight.Light,
                                 fontSize = 20.sp
                             )
-                            Card(
-                                Modifier
-                                    .padding(top = 10.dp)
-                                    .fillMaxSize(),
-                                elevation = 5.dp,
-                                shape = RoundedCornerShape(32.dp)
-                            ) {
-                                Image(
-                                    painterResource(id = R.drawable.the_camera),
-                                    contentDescription = "The camera",
-                                    modifier = Modifier
-                                        .size(180.dp)
-                                )
+                            imageUri?.let {
+                                if (Build.VERSION.SDK_INT < 28) {
+                                    bitmap.value = MediaStore.Images.Media.getBitmap(
+                                        context.contentResolver,
+                                        it
+                                    )
+                                } else {
+                                    val source =
+                                        ImageDecoder.createSource(context.contentResolver, it)
+                                    bitmap.value = ImageDecoder.decodeBitmap(source)
+                                }
+
+                                bitmap.value?.let { btm ->
+                                    Image(
+                                        bitmap = btm.asImageBitmap(),
+                                        contentDescription = null,
+                                        modifier = Modifier
+                                            .size(300.dp)
+                                    )
+                                }
+                            }
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Button(onClick = { launcher.launch("image/*") }) {
+                                Text(text = "Pick Image")
                             }
                             Column(
                                 Modifier
@@ -249,31 +332,62 @@ fun SearchScreen(navController: NavController) {
                                     shape = RoundedCornerShape(16.dp),
                                     onClick = {
                                         val user = Firebase.auth.currentUser
-                                        user?.let {
-                                            // Name, email address, and profile photo Url
-                                            val username = user.displayName
+                                        if (user != null) {
+                                            user?.let {
+                                                // Name, email address, and profile photo Url
+                                                val username = user.displayName
 //                                            val email = user.email
 //                                            val photoUrl = user.photoUrl
 
-                                            // Check if user's email is verified
+                                                // Check if user's email is verified
 //                                            val emailVerified = user.isEmailVerified
 
-                                            // The user's ID, unique to the Firebase project. Do NOT use this value to
-                                            // authenticate with your backend server, if you have one. Use
-                                            // FirebaseUser.getToken() instead.
+                                                // The user's ID, unique to the Firebase project. Do NOT use this value to
+                                                // authenticate with your backend server, if you have one. Use
+                                                // FirebaseUser.getToken() instead.
 //                                            val uid = user.uid
 
-                                            if (username != null) {
-                                                writeNewItem(
-                                                    title,
-                                                    categoryItems[selectedIndex],
-                                                    details.text,
-                                                    description.text,
-                                                    phoneNumber.text,
-                                                    value.text,
-                                                    username
-                                                )
+                                                if (username != null) {
+                                                    val imageName = "${System.currentTimeMillis()}.jpg"
+                                                    GlobalScope.launch(Dispatchers.IO) {
+                                                        val compressedImage = compressImage(
+                                                            context as ComponentActivity,
+                                                            imageUri!!
+                                                        )
+                                                        uploadPhoto(
+                                                            compressedImage!!,
+                                                            imageName,
+                                                            "image/jpg"
+                                                        ) {
+                                                            GlobalScope.launch(Dispatchers.Main) {
+                                                                Log.d(
+                                                                    "UPLOAD",
+                                                                    "FILE UPDATED !!!!!!!!!!!!!!!!!"
+                                                                )
+                                                            }
+                                                        }
+                                                    }
+
+                                                    FirebaseStorage.getInstance().reference.child("/images/${imageName}").downloadUrl.addOnSuccessListener {
+                                                        Log.d("IMAGE", it.toString())
+                                                    }.addOnFailureListener {
+                                                        Log.d("IMAGE", "FAILED TO GET IMAGE PATH!!!!!!!!!!!!!!!")
+                                                    }
+                                                    Log.d("IMAGESS", "images/${imageName}")
+
+                                                    writeNewItem(
+                                                        title,
+                                                        categoryItems[selectedIndex],
+                                                        details.text,
+                                                        description.text,
+                                                        phoneNumber.text,
+                                                        value.text,
+                                                        username,
+                                                    )
+                                                }
                                             }
+                                        } else {
+                                            Log.d("USER", "NO USER FOUND !!!!!!!!!!!!")
                                         }
                                     }
                                 ) {
@@ -355,6 +469,7 @@ fun ComposeMenu(
         }
     }
 }
+
 /*
 @Composable
 fun DropDownMenu(selectedText: String, onInputChanged: (String) -> Unit) {
@@ -508,23 +623,23 @@ fun Swich1() {
                         " telekomunikacyjne.",
             )
             //TU POWINIEN BYĆ ZAMKNIECIE COLUMNY
-                   }
-           Row(
-                Modifier
-                    .fillMaxSize()
-                    .padding(top = 65.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                Switch(
-                    checked = checkedState.value,
-                    onCheckedChange = { checkedState.value = it },
-                    colors = SwitchDefaults.colors(
-                        checkedThumbColor = Color(0xffEE4367),
-                        uncheckedThumbColor = Color(0xff6162F5)
-                    )
-                )
-            }
         }
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(top = 65.dp),
+            horizontalArrangement = Arrangement.SpaceBetween
+        ) {
+            Switch(
+                checked = checkedState.value,
+                onCheckedChange = { checkedState.value = it },
+                colors = SwitchDefaults.colors(
+                    checkedThumbColor = Color(0xffEE4367),
+                    uncheckedThumbColor = Color(0xff6162F5)
+                )
+            )
+        }
+    }
 //    }
 }
 
