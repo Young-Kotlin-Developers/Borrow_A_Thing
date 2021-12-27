@@ -50,7 +50,10 @@ class MainActivity : ComponentActivity() {
                                 RegisterPage(navController)
                             }
                             composable("Home") {
-                                SearchScreen(navController)
+                                HomeScreen(navController)
+                            }
+                            composable("Creator") {
+                                OfferCreatorScreen(navController)
                             }
                             composable("Detail") {
                                 DetailScreen(navController)

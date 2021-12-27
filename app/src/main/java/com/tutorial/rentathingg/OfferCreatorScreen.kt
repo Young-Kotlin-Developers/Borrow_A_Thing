@@ -1,5 +1,6 @@
 package com.tutorial.rentathingg
 
+import android.app.ProgressDialog
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
 import android.net.Uri
@@ -47,52 +48,11 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
+import java.text.SimpleDateFormat
+import java.util.*
 
 class TextFieldState() {
     var text: String by mutableStateOf("")
-}
-
-fun compressImage(context: ComponentActivity, uri: Uri): Uri? {
-    val bitmap = if (Build.VERSION.SDK_INT < 28) {
-        MediaStore.Images.Media.getBitmap(context.contentResolver, uri)
-    } else {
-        val source = ImageDecoder.createSource(context.contentResolver, uri)
-        ImageDecoder.decodeBitmap(source)
-    }
-    val bytes = ByteArrayOutputStream()
-    bitmap.compress(Bitmap.CompressFormat.JPEG, 60, bytes)
-    val path: String = MediaStore.Images.Media.insertImage(
-        context.contentResolver, bitmap, "Title", null
-    )
-    return Uri.parse(path)
-}
-
-private suspend fun uploadPhoto(
-    uri: Uri,
-    name: String,
-    mimeType: String?,
-    callback: (url: String) -> Unit
-) {
-    val storage = FirebaseStorage.getInstance()
-    val storageRef = storage.reference
-    val fileRef = storageRef.child("images/$name")
-
-    val metadata = mimeType?.let {
-        StorageMetadata.Builder()
-            .setContentType(mimeType)
-            .build()
-    }
-
-    if (metadata != null) {
-        fileRef.putFile(uri, metadata)
-//        fileRef.putFile(uri, metadata).await()
-    } else {
-        fileRef.putFile(uri)
-//        fileRef.putFile(uri).await()
-    }
-
-    callback(fileRef.downloadUrl.toString())
-//    callback(fileRef.downloadUrl.await().toString())
 }
 
 fun writeNewItem(
@@ -102,11 +62,14 @@ fun writeNewItem(
     description: String,
     phoneNum: String,
     value: String,
-    author: String
+    author: String,
+    authorId: String,
+    imageUri: String
 ) {
     lateinit var database: DatabaseReference
     database = Firebase.database.reference
-    val item = Item(title, category, detail, description, phoneNum, value, author)
+    val item =
+        Item(title, category, detail, description, phoneNum, value, author, authorId, imageUri)
 
     val id = FirebaseDatabase.getInstance().getReference("items").push().key
     if (id != null) {
@@ -115,7 +78,7 @@ fun writeNewItem(
 }
 
 @Composable
-fun SearchScreen(navController: NavController) {
+fun OfferCreatorScreen(navController: NavController) {
 
     var title by remember { mutableStateOf("") }
     var details = remember { TextFieldState() }
@@ -178,7 +141,7 @@ fun SearchScreen(navController: NavController) {
                             .padding(top = 50.dp),
                     ) {
                         Text(
-                            text = "You should put a ad",
+                            text = "Offer creator",
                             fontWeight = FontWeight.Bold,
                             fontSize = 32.sp
                         )
@@ -188,7 +151,7 @@ fun SearchScreen(navController: NavController) {
                                 .padding(top = 50.dp),
                         ) {
                             Text(
-                                text = "And the more detail, the better!",
+                                text = "The more details, the better!",
                                 fontWeight = FontWeight.Light,
                                 fontSize = 20.sp
                             )
@@ -223,7 +186,7 @@ fun SearchScreen(navController: NavController) {
                                     .padding(top = 50.dp),
                             ) {
                                 Text(
-                                    text = "Ad title",
+                                    text = "Title",
                                     fontWeight = FontWeight.Light,
                                     fontSize = 17.sp
                                 )
@@ -244,7 +207,7 @@ fun SearchScreen(navController: NavController) {
                                 )
                                 Spacer(modifier = Modifier.weight(1f))
                                 Text(
-                                    text = "Select categories",
+                                    text = "Category",
                                     fontWeight = FontWeight.Light,
                                     fontSize = 17.sp
                                 )
@@ -303,7 +266,7 @@ fun SearchScreen(navController: NavController) {
                                     Phone_number(phoneNumber)
                                 }
                                 Text(
-                                    text = "value",
+                                    text = "Value",
                                     fontWeight = FontWeight.Light,
                                     fontSize = 17.sp
                                 )
@@ -331,63 +294,72 @@ fun SearchScreen(navController: NavController) {
                                     modifier = Modifier.fillMaxWidth(),
                                     shape = RoundedCornerShape(16.dp),
                                     onClick = {
+                                        // get user from firebase //
                                         val user = Firebase.auth.currentUser
                                         if (user != null) {
-                                            user?.let {
-                                                // Name, email address, and profile photo Url
+                                            user.let {
+                                                // username and userId //
                                                 val username = user.displayName
-//                                            val email = user.email
-//                                            val photoUrl = user.photoUrl
-
-                                                // Check if user's email is verified
-//                                            val emailVerified = user.isEmailVerified
-
-                                                // The user's ID, unique to the Firebase project. Do NOT use this value to
-                                                // authenticate with your backend server, if you have one. Use
-                                                // FirebaseUser.getToken() instead.
-//                                            val uid = user.uid
+                                                val uid = user.uid
 
                                                 if (username != null) {
-                                                    val imageName = "${System.currentTimeMillis()}.jpg"
-                                                    GlobalScope.launch(Dispatchers.IO) {
-                                                        val compressedImage = compressImage(
-                                                            context as ComponentActivity,
-                                                            imageUri!!
-                                                        )
-                                                        uploadPhoto(
-                                                            compressedImage!!,
-                                                            imageName,
-                                                            "image/jpg"
-                                                        ) {
-                                                            GlobalScope.launch(Dispatchers.Main) {
-                                                                Log.d(
-                                                                    "UPLOAD",
-                                                                    "FILE UPDATED !!!!!!!!!!!!!!!!!"
-                                                                )
+                                                    val progressDialog = ProgressDialog(context)
+                                                    progressDialog.setMessage("Uploading file...")
+                                                    progressDialog.setCancelable(false)
+                                                    progressDialog.show()
+
+                                                    // creating image name based on current date //
+                                                    val formatter = SimpleDateFormat(
+                                                        "yyyy_MM_dd_HH_mm_ss",
+                                                        Locale.getDefault()
+                                                    )
+                                                    val now = Date()
+                                                    val fileName = formatter.format(now)
+
+                                                    // reference to firebase storage data //
+                                                    val ref = FirebaseStorage.getInstance()
+                                                        .getReference("images/$fileName")
+                                                    val uploadTask = ref.putFile(imageUri!!)
+
+                                                    // uploading image to firebase storage //
+                                                    uploadTask.continueWithTask { task ->
+                                                        if (!task.isSuccessful) {
+                                                            task.exception?.let {
+                                                                throw it
                                                             }
                                                         }
-                                                    }
+                                                        ref.downloadUrl
+                                                    }.addOnCompleteListener { task ->
+                                                        if (task.isSuccessful) {
+                                                            // url to image in firebase storage
+                                                            val downloadUri = task.result
 
-                                                    FirebaseStorage.getInstance().reference.child("/images/${imageName}").downloadUrl.addOnSuccessListener {
-                                                        Log.d("IMAGE", it.toString())
-                                                    }.addOnFailureListener {
-                                                        Log.d("IMAGE", "FAILED TO GET IMAGE PATH!!!!!!!!!!!!!!!")
+                                                            // update new item to realtime database
+                                                            writeNewItem(
+                                                                title,
+                                                                categoryItems[selectedIndex],
+                                                                details.text,
+                                                                description.text,
+                                                                phoneNumber.text,
+                                                                value.text,
+                                                                username,
+                                                                uid,
+                                                                downloadUri.toString()
+                                                            )
+                                                            if (progressDialog.isShowing) progressDialog.dismiss()
+                                                        } else {
+                                                            // Handle failures //
+                                                            if (progressDialog.isShowing) progressDialog.dismiss()
+                                                            Log.d(
+                                                                "IMAGE",
+                                                                "FAILED TO UPLOAD IMAGE!!!"
+                                                            )
+                                                        }
                                                     }
-                                                    Log.d("IMAGESS", "images/${imageName}")
-
-                                                    writeNewItem(
-                                                        title,
-                                                        categoryItems[selectedIndex],
-                                                        details.text,
-                                                        description.text,
-                                                        phoneNumber.text,
-                                                        value.text,
-                                                        username,
-                                                    )
                                                 }
                                             }
                                         } else {
-                                            Log.d("USER", "NO USER FOUND !!!!!!!!!!!!")
+                                            Log.d("USER", "USER NOT LOGGED IN!!!")
                                         }
                                     }
                                 ) {
@@ -399,7 +371,7 @@ fun SearchScreen(navController: NavController) {
                     }
                 }
             }
-        }//koniec background kolumny
+        }
     }
 }
 
