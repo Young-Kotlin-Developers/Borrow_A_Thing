@@ -1,8 +1,8 @@
 package com.tutorial.rentathingg
 
+import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
@@ -10,11 +10,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.*
-import androidx.compose.runtime.Composable
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.Phone
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
@@ -25,56 +26,87 @@ import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.firebase.database.DatabaseReference
+import com.google.firebase.database.ktx.database
+import com.google.firebase.ktx.Firebase
+import java.text.DateFormat
+import java.time.LocalDate
+import java.time.format.DateTimeFormatter
 
 @Composable
-fun DetailScreen(navController: NavController) {
+fun DetailsScreen(navController: NavController) {
+    var title by remember { mutableStateOf("") }
+    var price by remember { mutableStateOf("") }
+    var imageUrl by remember { mutableStateOf("") }
+    var details by remember { mutableStateOf("") }
+    var description by remember { mutableStateOf("") }
+    var uploadDate by remember { mutableStateOf("") }
+
+    val descriptionDataList = listOf(
+        TextData(
+            title = "Details: ",
+            detail = details
+        ),
+        TextData(
+            title = "Description",
+            detail = description
+        )
+    )
+
+    // tymczasowy itemId
+    // TODO: itemId powinien być pobierany ze screena z ofertami, teraz to jest statyczne i jest dla jednego itemu
+    val itemId = "-Mrx7S6QdaxImv14AaLo"
+
+    val database: DatabaseReference = Firebase.database.reference
+
+    database.child("items").child(itemId).get().addOnSuccessListener {
+        Log.d("firebase", "Got value ${it.value}")
+        title = it.child("title").value as String
+        price = it.child("price").value as String
+        imageUrl = it.child("imageUri").value as String
+        details = it.child("details").value as String
+        description = it.child("description").value as String
+        uploadDate = it.child("uploadDate").value as String
+
+    }.addOnFailureListener{
+        Log.d("firebase", "Error getting data", it)
+    }
 
     Scaffold(backgroundColor = Color.White) {
-
         LazyColumn() {
-            Modifier
-
             item {
-                Photoadapter(navController)
-                Infoproduct()
+                Photoadapter(navController, imageUrl)
+                Infoproduct(uploadDate, title, price)
             }
-
-            itemsIndexed(tripDays) { position, data ->
+            itemsIndexed(descriptionDataList) { position, data ->
                 TextContent(data)
             }
             item {
                 BottomNav()
             }
-
-
         }
     }
 }
 
-@Composable
-fun Photoadapter(navController: NavController) {
+data class TextData(val title: String, val detail: String)
 
-    val detailHeaderImageUrl =
-        "https://e-irwin.pl/pol_pl_Mlotowiertarka-SDS-Plus-28mm-z-QCC-900W-DeWalt-140659_1.jpg"
+@Composable
+fun Photoadapter(navController: NavController, imageUrl: String) {
 
     Box() {
-
         Image(
-            painter = rememberCoilPainter(request = detailHeaderImageUrl),
+            painter = rememberCoilPainter(request = imageUrl),
             contentDescription = "",
             contentScale = ContentScale.Crop,
             modifier = Modifier
                 .fillMaxWidth()
                 .height(300.dp)
         )
-
-
         Box(
             modifier = Modifier
                 .statusBarsPadding()
                 .fillMaxWidth()
         ) {
-
             TopButton(
                 imageVector = Icons.Default.ArrowBack,
                 modifier = Modifier
@@ -83,17 +115,12 @@ fun Photoadapter(navController: NavController) {
             ) {
                 navController.popBackStack()
             }
-
         }
-
-
     }
-
 }
 
-
 @Composable
-fun Infoproduct() {
+fun Infoproduct(uploadDate: String, title: String, price: String) {
     Divider(
         color = Color(0xFFECECEE),
         modifier = Modifier.padding(0.dp)
@@ -104,17 +131,17 @@ fun Infoproduct() {
             .padding(15.dp)
     ) {
         Text(
-            text = "Dodano dzisiaj o 19:30",
+            text = uploadDate,
             fontWeight = FontWeight.Light,
             fontSize = 10.sp
         )
         Text(
-            text = "Wiertara Andrzeja",
+            text = title,
             fontWeight = FontWeight.Bold,
             fontSize = 20.sp
         )
         Text(
-            text = "20 zł",
+            text = "$price zł",
             fontWeight = FontWeight.Normal,
             fontSize = 18.sp
         )
@@ -125,66 +152,29 @@ fun Infoproduct() {
     }
 }
 
-data class TextData(val title: String, val detail: String)
-
-var tripDays = listOf(
-    TextData(
-        title = "Detale: ",
-        detail ="Moc pobierana 701 W \n" +
-                "Moc użyteczna 302 W \n" +
-                "Maks. moment obrotowy 8.6 Nm \n" +
-                "Prędkość bez obciążenia 0-2800 obr/min\n" +
-                "Częstość udarów 47600 ud/min \n" +
-                "Maks. średnica wiercenia [Drewno] 25 mm \n" +
-                "Maks. śr. wiercenia w stali 13 mm \n" +
-                "Maks. śr. wiercenia w betonie 16 mm \n" +
-                "Gwint wrzeciona 1/2 x 20 U.N.F \n" +
-                "Masa 1,82 kg \n" +
-                "Długość 255 mm\n"
-    ),
-    TextData(
-        title = "Opis: ",
-        detail = "-Niewielka waga umożliwia łatwe sterowanie i pracę bez zmęczenia Zwarta budowa gwarantuje wygodne użytkowanie również w miejscach o ograniczonym dostępie.\n" +
-                " -Doskonały stosunek mocy do gabarytów \n" +
-                "- mocna, wytrzymała wiertarka o niewielkich rozmiarach. \n" +
-                "-Uszczelniony przed pyłem włącznik ze sterowaniem prędkością obrotową umożliwia płynne i precyzyjne wiercenie, szczególnie przy wstępnym nawiercaniu otworów. \n" +
-                "-Gumowana rękojeść zwiększa pewność i wygodę pracy przy wierceniach z udarem i bez . \n" +
-                "-Włącznik z blokadą stanu włączenia umożliwia pracę ciągłą przy powtarzalnych wierceniach.\n"
-    ),
-)
-
-
 @Composable
-fun TextContent(day: TextData) {
-
+fun TextContent(data: TextData) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-
         Text(
-            text = day.title.uppercase(),
+            text = data.title.uppercase(),
             fontSize = 14.sp,
             fontWeight = FontWeight.ExtraBold,
             letterSpacing = 0.75.sp
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Text(
-            text = day.detail,
+            text = data.detail,
             fontSize = 14.sp,
             fontWeight = FontWeight.Light,
             lineHeight = 18.sp
         )
-
     }
-
 }
 
 @Composable
 fun TopButton(imageVector: ImageVector, modifier: Modifier, clickListener: () -> Unit) {
-
-
     Button(
         onClick = { clickListener() },
         border = BorderStroke(2.dp, Color(0xDDF6F9FF)),
@@ -194,9 +184,7 @@ fun TopButton(imageVector: ImageVector, modifier: Modifier, clickListener: () ->
             contentColor = Color(0xff6162F5)
         ),
         modifier = modifier.size(48.dp)
-
     ) {
-
         Icon(imageVector = imageVector, contentDescription = "")
     }
 }
@@ -227,27 +215,24 @@ fun BottomNav() {
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = "Wiadomość")
+                Text(text = "Message")
             }
             Button(
                 onClick = { },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color(0xffEE4367),
                     contentColor = Color(0xFFFFF5EE),
-
-                    ),
+                ),
                 shape = RoundedCornerShape(16.dp),
-
-                ) {
+            ) {
                 Icon(
                     Icons.Filled.Phone,
                     contentDescription = "Phone",
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = "Zadzwoń", color = Color.White)
+                Text(text = "Phone", color = Color.White)
             }
         }
     }
-
 }

@@ -55,8 +55,8 @@ class MainActivity : ComponentActivity() {
                             composable("Creator") {
                                 OfferCreatorScreen(navController)
                             }
-                            composable("Detail") {
-                                DetailScreen(navController)
+                            composable("Details") {
+                                DetailsScreen(navController)
                             }
                         }
                     }

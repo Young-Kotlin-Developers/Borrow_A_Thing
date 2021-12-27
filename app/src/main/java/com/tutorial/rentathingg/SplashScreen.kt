@@ -38,7 +38,8 @@ fun SplashScreen(navController: NavController) {
         delay(3000L)
         //nav wie gdzie ma Register
 //        navController.navigate("SigIn")
-        navController.navigate("Creator")
+        navController.navigate("Details")
+//        navController.navigate("Creator")
     }
 
     // Image

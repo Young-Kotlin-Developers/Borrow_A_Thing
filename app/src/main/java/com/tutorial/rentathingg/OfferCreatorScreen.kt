@@ -58,18 +58,18 @@ class TextFieldState() {
 fun writeNewItem(
     title: String,
     category: String,
-    detail: String,
+    details: String,
     description: String,
     phoneNum: String,
-    value: String,
+    price: String,
     author: String,
     authorId: String,
-    imageUri: String
+    imageUri: String,
+    uploadDate: String
 ) {
-    lateinit var database: DatabaseReference
-    database = Firebase.database.reference
+    var database: DatabaseReference = Firebase.database.reference
     val item =
-        Item(title, category, detail, description, phoneNum, value, author, authorId, imageUri)
+        Item(title, category, details, description, phoneNum, price, author, authorId, imageUri, uploadDate)
 
     val id = FirebaseDatabase.getInstance().getReference("items").push().key
     if (id != null) {
@@ -94,8 +94,8 @@ fun OfferCreatorScreen(navController: NavController) {
     var categoriesExpanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
 
-    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val context = LocalContext.current
+    var imageUri by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
 
     val launcher =
@@ -310,7 +310,7 @@ fun OfferCreatorScreen(navController: NavController) {
 
                                                     // creating image name based on current date //
                                                     val formatter = SimpleDateFormat(
-                                                        "yyyy_MM_dd_HH_mm_ss",
+                                                        "yyyy-MM-dd HH:mm:ss",
                                                         Locale.getDefault()
                                                     )
                                                     val now = Date()
@@ -344,7 +344,8 @@ fun OfferCreatorScreen(navController: NavController) {
                                                                 value.text,
                                                                 username,
                                                                 uid,
-                                                                downloadUri.toString()
+                                                                downloadUri.toString(),
+                                                                fileName
                                                             )
                                                             if (progressDialog.isShowing) progressDialog.dismiss()
                                                         } else {
