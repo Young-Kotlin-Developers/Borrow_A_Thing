@@ -14,6 +14,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.ProvideWindowInsets
+import com.tutorial.rentathingg.BottomNavBar.MainScreen
 import com.tutorial.rentathingg.ui.theme.MainColor
 import com.tutorial.rentathingg.ui.theme.RentAThinggTheme
 
@@ -38,8 +39,6 @@ class MainActivity : ComponentActivity() {
                             navController = navController,
                             startDestination = "splash"
                         ) {
-
-
                             composable("splash") {
                                 SplashScreen(navController)
                             }
@@ -57,6 +56,9 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("Details") {
                                 DetailsScreen(navController)
+                            }
+                            composable("BottonNav") {
+                                MainScreen(navController)
                             }
                         }
                     }
