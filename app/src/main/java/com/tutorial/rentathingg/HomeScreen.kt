@@ -47,6 +47,7 @@ fun HeroSection() {
         Row(
             horizontalArrangement = Arrangement.Center,
             modifier = Modifier
+                .navigationBarsPadding()
                 .fillMaxWidth()
         ){
             Column(

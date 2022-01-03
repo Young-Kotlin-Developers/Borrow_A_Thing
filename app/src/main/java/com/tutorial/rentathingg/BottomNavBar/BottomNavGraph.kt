@@ -5,6 +5,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import com.tutorial.rentathingg.DetailsScreen
 import com.tutorial.rentathingg.HomeScreen
 import com.tutorial.rentathingg.OfferCreatorScreen
 
@@ -23,7 +24,7 @@ fun BottomNavGraph(navController: NavHostController) {
             OfferCreatorScreen(navController)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            ProfileScreen(navController)
+            DetailsScreen(navController)
         }
     }
 }

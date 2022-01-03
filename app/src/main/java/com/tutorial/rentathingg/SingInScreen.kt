@@ -128,7 +128,7 @@ fun SignInScreen(navController: NavController) {
                                     .addOnCompleteListener { task ->
                                         if (task.isSuccessful) {
                                             Log.d("AUTH", "Login successful")
-                                            navController.navigate("Home")
+                                            navController.navigate("BottonNav")
                                         } else {
                                             Log.d("AUTH", "Unable to login. Check your input or try again later")
                                         }

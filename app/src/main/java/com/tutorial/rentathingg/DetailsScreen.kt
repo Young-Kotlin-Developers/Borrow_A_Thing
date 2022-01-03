@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.BookmarkBorder
 import androidx.compose.material.icons.filled.Chat
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.runtime.*
@@ -114,6 +115,14 @@ fun Photoadapter(navController: NavController, imageUrl: String) {
                     .padding(16.dp)
             ) {
                 navController.popBackStack()
+            }
+            TopButton(
+                imageVector = Icons.Default.BookmarkBorder,
+                modifier = Modifier
+                    .align(Alignment.TopEnd)
+                    .padding(16.dp)
+            ) {
+
             }
         }
     }
