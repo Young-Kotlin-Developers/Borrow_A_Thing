@@ -19,6 +19,7 @@ buildscript {
 plugins {
 
     
+id 'org.jetbrains.kotlin.android' version '1.5.31' apply false
 }
 
 task clean(type: Delete) {

@@ -1,8 +1,11 @@
 package com.tutorial.rentathingg
 
 import android.os.Bundle
+import android.os.Handler
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
@@ -17,8 +20,11 @@ import com.google.accompanist.insets.ProvideWindowInsets
 import com.tutorial.rentathingg.BottomNavBar.MainScreen
 import com.tutorial.rentathingg.ui.theme.MainColor
 import com.tutorial.rentathingg.ui.theme.RentAThinggTheme
+import kotlinx.coroutines.runBlocking
+import javax.xml.transform.Result
 
 class MainActivity : ComponentActivity() {
+    private val viewModel by viewModels<ItemViewModel>()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -27,7 +33,6 @@ class MainActivity : ComponentActivity() {
             RentAThinggTheme {
 
                 val navController = rememberNavController()
-
                 ProvideWindowInsets {
                     Surface(
                         Modifier
@@ -48,17 +53,17 @@ class MainActivity : ComponentActivity() {
                             composable("Register") {
                                 RegisterPage(navController)
                             }
-                            composable("Home") {
+                           composable("Home") {
                                 HomeScreen(navController)
-                            }
-                            composable("Creator") {
-                                OfferCreatorScreen(navController)
-                            }
+                           }
                             composable("Details") {
                                 DetailsScreen(navController)
                             }
                             composable("BottonNav") {
                                 MainScreen(navController)
+                            }
+                            composable("Result") {
+                                SerchScreen(navController,viewModel)
                             }
                         }
                     }
@@ -74,9 +79,9 @@ fun Greeting(name: String) {
     Text(text = "Hello $name!")
 }
 
-@Preview(showBackground = true)
-@Composable
-fun DefaultPreview() {
-
-
-}
+//@Preview(showBackground = true)
+//@Composable
+//fun DefaultPreview() {
+//
+//
+//}

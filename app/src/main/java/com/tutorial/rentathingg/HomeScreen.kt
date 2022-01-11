@@ -1,5 +1,6 @@
 package com.tutorial.rentathingg
 
+import android.util.Log
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -25,6 +26,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.google.accompanist.insets.navigationBarsPadding
+import com.google.firebase.database.DataSnapshot
+import com.google.firebase.database.DatabaseError
+import com.google.firebase.database.FirebaseDatabase
+import com.google.firebase.database.ValueEventListener
 import com.tutorial.rentathingg.ui.theme.MainColor
 import kotlinx.coroutines.launch
 
@@ -37,10 +42,12 @@ fun HomeScreen(navController: NavController) {
     ) {
         Column {
             HeroSection()
-            SearchSection()
+            SearchSection(navController)
+
+            }
         }
-    }
 }
+
 
 @Composable
 fun HeroSection() {
@@ -58,25 +65,25 @@ fun HeroSection() {
             )
             {
             BoxWithConstraints {
-                if (maxWidth < 400.dp) {
-                    Image(
-                        painter = painterResource(R.drawable.sasiedzi),
-                        contentDescription = "Hero picture",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(250.dp)
-                    )
-                } else {
-                    Image(
-                        painter = painterResource(R.drawable.sasiedzi),
-                        contentDescription = "Hero picture",
-                        contentScale = ContentScale.FillWidth,
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(430.dp)
-                    )
-                }
+//                if (maxWidth < 400.dp) {
+//                    Image(
+//                        painter = painterResource(R.drawable.sasiedzi),
+//                        contentDescription = "Hero picture",
+//                        contentScale = ContentScale.FillWidth,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(250.dp)
+//                    )
+//                } else {
+//                    Image(
+//                        painter = painterResource(R.drawable.sasiedzi),
+//                        contentDescription = "Hero picture",
+//                        contentScale = ContentScale.FillWidth,
+//                        modifier = Modifier
+//                            .fillMaxWidth()
+//                            .height(430.dp)
+//                    )
+//                }
             }
                 Spacer(modifier = Modifier.height(10.dp))
                 Text(
@@ -98,7 +105,7 @@ fun HeroSection() {
 
 //@Preview
 @Composable
-fun SearchSection() {
+fun SearchSection(navController: NavController) {
     val scaffoldState = rememberScaffoldState()
     var itemFieldState by remember {
         mutableStateOf("")
@@ -159,6 +166,14 @@ fun SearchSection() {
                 /* TODO Dodać wyszukiwanie wedlug wpisanych wartosci */
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar("Item: $itemFieldState")
+                    if(itemFieldState != null){
+                        var userId=itemFieldState
+                        navController.navigate("Result")
+                    }
+                    else if (categoryFieldState !=null){
+                        navController.navigate("Result")
+                    }
+
                 }
             }) {
                 Text("Szukaj", style = MaterialTheme.typography.h5)
