@@ -1,8 +1,6 @@
 package com.tutorial.rentathingg
 
 import android.os.Bundle
-import android.os.Handler
-import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
@@ -11,17 +9,16 @@ import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.view.WindowCompat
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import com.google.accompanist.insets.ProvideWindowInsets
 import com.tutorial.rentathingg.BottomNavBar.MainScreen
 import com.tutorial.rentathingg.ui.theme.MainColor
 import com.tutorial.rentathingg.ui.theme.RentAThinggTheme
-import kotlinx.coroutines.runBlocking
-import javax.xml.transform.Result
 
 class MainActivity : ComponentActivity() {
     private val viewModel by viewModels<ItemViewModel>()
@@ -62,8 +59,17 @@ class MainActivity : ComponentActivity() {
                             composable("Offer") {
                                 OfferCreatorScreen(navController)
                             }
-                            composable("Details") {
-                                DetailsScreen(navController, viewModel)
+                            composable(
+                                route = "Details/{colorName}",
+                                arguments = listOf(
+                                    navArgument("colorName") { type = NavType.IntType },
+                                )
+                            ){ backStackEntry ->
+                                DetailsScreen(
+                                    navController,
+                                    viewModel,
+                                    backStackEntry.arguments?.getInt("colorName")
+                                )
                             }
                             composable("BottonNav") {
                                 MainScreen(navController)

@@ -15,7 +15,7 @@ import com.google.firebase.database.ValueEventListener
 import com.google.firebase.firestore.ktx.toObjects
 
 class ItemViewModel:ViewModel() {
-    private  val _books= mutableStateOf<List<ItemResult>>(listOf())
+    private val _books = mutableStateOf<List<ItemResult>>(listOf())
     val books: State<List<ItemResult>>
         get()=_books
     val query= FirebaseFirestore.getInstance().collection("items")

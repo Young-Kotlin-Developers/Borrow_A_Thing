@@ -39,6 +39,7 @@ fun SplashScreen(navController: NavController) {
         //nav wie gdzie ma Register
 //        navController.navigate("SigIn")
         navController.navigate("SigIn")
+//        navController.navigate("Home")
 //        navController.navigate("Creator")
     }
 

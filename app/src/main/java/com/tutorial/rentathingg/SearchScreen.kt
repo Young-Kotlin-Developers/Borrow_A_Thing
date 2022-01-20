@@ -55,7 +55,7 @@ fun SerchScreen(navController: NavController,viewmodel:ItemViewModel) {
             ) {
 
                 itemsIndexed(viewmodel.books.value) { position, data ->
-                    RawItem(searchModel = data, navController = navController)
+                    RawItem(searchModel = data, navController = navController, position = position)
                 }
             }
 
@@ -76,7 +76,7 @@ fun SerchScreen(navController: NavController,viewmodel:ItemViewModel) {
                 }
 
                 itemsIndexed(viewmodel.books.value) { position, data ->
-                    SearchItem(searchModel = data, navController = navController)
+                    SearchItem(searchModel = data, navController = navController, position)
                 }
 //
 //                item {
@@ -101,7 +101,7 @@ data class SearchModel(
 
 
 @Composable
-fun SearchItem(searchModel: ItemResult, navController: NavController) {
+fun SearchItem(searchModel: ItemResult, navController: NavController, position: Int) {
 
     Column(
         modifier = Modifier
@@ -116,7 +116,7 @@ fun SearchItem(searchModel: ItemResult, navController: NavController) {
             modifier = Modifier
                 .clip(RoundedCornerShape(8.dp))
                 .clickable {
-                    navController.navigate("Details")
+                    navController.navigate("Details/${position}")
                 }
                 .height(200.dp)
                 .fillMaxWidth()
@@ -190,7 +190,7 @@ val Textdownload = listOf<SearchModel>(
 )
 
 @Composable
-fun RawItem(navController: NavController, searchModel: ItemResult) {
+fun RawItem(navController: NavController, searchModel: ItemResult, position: Int) {
     Column(
         modifier = Modifier
             .fillMaxWidth()
@@ -211,7 +211,8 @@ fun RawItem(navController: NavController, searchModel: ItemResult) {
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
-                        navController.navigate("Details")
+//                        navController.navigate("Details")
+                        navController.navigate("Details/${position}")
                     }
                     .height(245.dp)
                     .fillMaxWidth()

@@ -18,13 +18,13 @@ sealed class BottomBarScreen(
         icon = Icons.Default.Home
     )
 
-    object Profile : BottomBarScreen(
+    object Creator : BottomBarScreen(
         route = "add",
         title = "Add",
         icon = Icons.Default.AddCircle
     )
 
-    object Settings : BottomBarScreen(
+    object Profile : BottomBarScreen(
         route = "profile",
         title = "Profile",
         icon = Icons.Default.Person
