@@ -25,6 +25,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
+import androidx.navigation.NavGraph
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.firebase.database.DataSnapshot
 import com.google.firebase.database.DatabaseError
@@ -163,10 +165,14 @@ fun SearchSection(navController: NavController) {
             Button(
                 colors = ButtonDefaults.buttonColors(backgroundColor = MainColor, contentColor = Color.White),
                 onClick = {
+
                 /* TODO Dodać wyszukiwanie wedlug wpisanych wartosci */
                 scope.launch {
+                    navController.navigate("Result"){
+
+                    }
                     scaffoldState.snackbarHostState.showSnackbar("Item: $itemFieldState")
-                    navController.navigate("Result")
+
 
                 }
             }) {

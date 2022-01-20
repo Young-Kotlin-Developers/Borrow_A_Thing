@@ -56,22 +56,18 @@ class MainActivity : ComponentActivity() {
                            composable("Home") {
                                 HomeScreen(navController)
                            }
-                            composable("Details") {
-                                DetailsScreen(navController, viewModel)
-                            }
-                            composable("BottonNav") {
-                                MainScreen(navController)
-                            }
-                            composable("BottonNav") {
-                                MainScreen(navController)
-                            }
                             composable("Result") {
                                 SerchScreen(navController,viewModel)
                             }
                             composable("Offer") {
                                 OfferCreatorScreen(navController)
                             }
-
+                            composable("Details") {
+                                DetailsScreen(navController, viewModel)
+                            }
+                            composable("BottonNav") {
+                                MainScreen(navController)
+                            }
                         }
                     }
                 }
