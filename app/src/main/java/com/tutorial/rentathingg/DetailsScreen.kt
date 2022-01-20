@@ -1,6 +1,5 @@
 package com.tutorial.rentathingg
 
-import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
@@ -27,15 +26,9 @@ import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
-import com.google.firebase.database.DatabaseReference
-import com.google.firebase.database.ktx.database
-import com.google.firebase.ktx.Firebase
-import java.text.DateFormat
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Composable
-fun DetailsScreen(navController: NavController) {
+fun DetailsScreen(navController: NavController, itemViewModel: ItemViewModel) {
     var title by remember { mutableStateOf("") }
     var price by remember { mutableStateOf("") }
     var imageUrl by remember { mutableStateOf("") }
@@ -43,43 +36,44 @@ fun DetailsScreen(navController: NavController) {
     var description by remember { mutableStateOf("") }
     var uploadDate by remember { mutableStateOf("") }
 
-    val descriptionDataList = listOf(
-        TextData(
-            title = "Details: ",
-            detail = details
-        ),
-        TextData(
-            title = "Description",
-            detail = description
-        )
-    )
+//    val descriptionDataList = listOf(
+//        TextData(
+//            title = "Details: ",
+//            detail = details
+//        ),
+//        TextData(
+//            title = "Description",
+//            detail = description
+//        )
+//    )
 
     // tymczasowy itemId
     // TODO: itemId powinien być pobierany ze screena z ofertami, teraz to jest statyczne i jest dla jednego itemu
-    val itemId = "-Mrx7S6QdaxImv14AaLo"
-
-    val database: DatabaseReference = Firebase.database.reference
-
-    database.child("items").child(itemId).get().addOnSuccessListener {
-        Log.d("firebase", "Got value ${it.value}")
-        title = it.child("title").value as String
-        price = it.child("price").value as String
-        imageUrl = it.child("imageUri").value as String
-        details = it.child("details").value as String
-        description = it.child("description").value as String
-        uploadDate = it.child("uploadDate").value as String
-
-    }.addOnFailureListener{
-        Log.d("firebase", "Error getting data", it)
-    }
+//    val itemId = "-Mrx7S6QdaxImv14AaLo"
+//
+//    val database: DatabaseReference = Firebase.database.reference
+//
+//    database.child("items").child(itemId).get().addOnSuccessListener {
+//        Log.d("firebase", "Got value ${it.value}")
+//        title = it.child("title").value as String
+//        price = it.child("price").value as String
+//        imageUrl = it.child("imageUri").value as String
+//        details = it.child("details").value as String
+//        description = it.child("description").value as String
+//        uploadDate = it.child("uploadDate").value as String
+//
+//
+//    }.addOnFailureListener{
+//        Log.d("firebase", "Error getting data", it)
+//    }
 
     Scaffold(backgroundColor = Color.White) {
         LazyColumn() {
-            item {
-                Photoadapter(navController, imageUrl)
-                Infoproduct(uploadDate, title, price)
+            itemsIndexed(itemViewModel.books.value) {position,data->
+                Photoadapter(navController, data.imageUri)
+                Infoproduct(data.uploadDate, data.title, data.price)
             }
-            itemsIndexed(descriptionDataList) { position, data ->
+            itemsIndexed(itemViewModel.books.value) { position, data ->
                 TextContent(data)
             }
             item {
@@ -162,19 +156,19 @@ fun Infoproduct(uploadDate: String, title: String, price: String) {
 }
 
 @Composable
-fun TextContent(data: TextData) {
+fun TextContent(data: ItemResult) {
     Column(
         modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
         Text(
-            text = data.title.uppercase(),
+            text = data.details.uppercase(),
             fontSize = 14.sp,
             fontWeight = FontWeight.ExtraBold,
             letterSpacing = 0.75.sp
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = data.detail,
+            text = data.description,
             fontSize = 14.sp,
             fontWeight = FontWeight.Light,
             lineHeight = 18.sp

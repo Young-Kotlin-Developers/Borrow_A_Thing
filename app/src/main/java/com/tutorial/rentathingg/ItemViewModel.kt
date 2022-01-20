@@ -5,6 +5,7 @@ import android.util.Log
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
+import androidx.navigation.NavController
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.database.DataSnapshot
@@ -18,6 +19,7 @@ class ItemViewModel:ViewModel() {
     val books: State<List<ItemResult>>
         get()=_books
     val query= FirebaseFirestore.getInstance().collection("items")
+
     init {
 //        query.get().addOnSuccessListener { result ->
 //            for (document in result) {
@@ -32,7 +34,6 @@ class ItemViewModel:ViewModel() {
         query.addSnapshotListener{ snapshot, _ ->
             snapshot?.let{querySnapshot ->
                 _books.value = querySnapshot.toObjects()
-
             }
         }
     }

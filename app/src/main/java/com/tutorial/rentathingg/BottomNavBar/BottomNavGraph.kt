@@ -7,12 +7,13 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.tutorial.rentathingg.DetailsScreen
 import com.tutorial.rentathingg.HomeScreen
+import com.tutorial.rentathingg.ItemViewModel
 import com.tutorial.rentathingg.OfferCreatorScreen
 
 
 
 @Composable
-fun BottomNavGraph(navController: NavHostController) {
+fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
     NavHost(
         navController = navController,
         startDestination = BottomBarScreen.Home.route
@@ -24,7 +25,7 @@ fun BottomNavGraph(navController: NavHostController) {
             OfferCreatorScreen(navController)
         }
         composable(route = BottomBarScreen.Settings.route) {
-            DetailsScreen(navController)
+            DetailsScreen(navController,viewModel)
         }
     }
 }

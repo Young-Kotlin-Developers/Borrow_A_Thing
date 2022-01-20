@@ -211,6 +211,7 @@ fun RawItem(navController: NavController, searchModel: ItemResult) {
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
+                        navController.navigate("Details")
                     }
                     .height(245.dp)
                     .fillMaxWidth()

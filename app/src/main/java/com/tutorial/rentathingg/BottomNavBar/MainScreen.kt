@@ -1,5 +1,6 @@
 package com.tutorial.rentathingg.BottomNavBar
 
+import android.content.ClipData
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -12,6 +13,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.google.accompanist.insets.navigationBarsPadding
+import com.tutorial.rentathingg.ItemViewModel
 
 @Composable
 fun MainScreen(navController: NavHostController) {
@@ -21,7 +23,7 @@ fun MainScreen(navController: NavHostController) {
             .navigationBarsPadding(),
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController)
+        BottomNavGraph(navController = navController,viewModel = ItemViewModel())
     }
 }
 

@@ -40,6 +40,7 @@ import com.google.firebase.auth.ktx.auth
 import com.google.firebase.database.DatabaseReference
 import com.google.firebase.database.FirebaseDatabase
 import com.google.firebase.database.ktx.database
+import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
@@ -50,6 +51,7 @@ import kotlinx.coroutines.launch
 import java.io.ByteArrayOutputStream
 import java.text.SimpleDateFormat
 import java.util.*
+import kotlin.random.Random
 
 class TextFieldState() {
     var text: String by mutableStateOf("")
@@ -67,14 +69,11 @@ fun writeNewItem(
     imageUri: String,
     uploadDate: String
 ) {
-    var database: DatabaseReference = Firebase.database.reference
+    val database= FirebaseFirestore.getInstance()
     val item =
         Item(title, category, details, description, phoneNum, price, author, authorId, imageUri, uploadDate)
+    database.collection("items").add(item)
 
-    val id = FirebaseDatabase.getInstance().getReference("items").push().key
-    if (id != null) {
-        database.child("items").child(id).setValue(item)
-    }
 }
 
 @Composable

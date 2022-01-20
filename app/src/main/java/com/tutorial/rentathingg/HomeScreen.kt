@@ -166,13 +166,7 @@ fun SearchSection(navController: NavController) {
                 /* TODO Dodać wyszukiwanie wedlug wpisanych wartosci */
                 scope.launch {
                     scaffoldState.snackbarHostState.showSnackbar("Item: $itemFieldState")
-                    if(itemFieldState != null){
-                        var userId=itemFieldState
-                        navController.navigate("Result")
-                    }
-                    else if (categoryFieldState !=null){
-                        navController.navigate("Result")
-                    }
+                    navController.navigate("Result")
 
                 }
             }) {
