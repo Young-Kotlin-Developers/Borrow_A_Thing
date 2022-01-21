@@ -23,7 +23,7 @@ fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
             OfferCreatorScreen(navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfilScreen(navController)
+            ProfilScreen(navController, viewModel)
         }
         composable("Result") {
             SerchScreen(navController, viewModel)
@@ -42,6 +42,12 @@ fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
                 viewModel,
                 backStackEntry.arguments?.getInt("colorName")
             )
+        }
+        composable("Offer") {
+            OfferCreatorScreen(navController)
+        }
+        composable("SigIn") {
+            SignInScreen(navController)
         }
     }
 }

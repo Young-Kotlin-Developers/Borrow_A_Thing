@@ -74,31 +74,12 @@ fun SerchScreen(navController: NavController,viewmodel:ItemViewModel) {
                         ),
                     )
                 }
-
                 itemsIndexed(viewmodel.books.value) { position, data ->
                     SearchItem(searchModel = data, navController = navController, position)
                 }
-//
-//                item {
-//                    Spacer(modifier = Modifier.navigationBarsPadding())
-//                }
-//                items(viewmodel.books.value){book->
-//                    BookCard(book)
-//
-//                }
-
             }
         }
     }
-
-
-
-data class SearchModel(
-    val image: String,
-    val price: String,
-    val name: String,
-)
-
 
 @Composable
 fun SearchItem(searchModel: ItemResult, navController: NavController, position: Int) {
@@ -150,45 +131,6 @@ fun SearchItem(searchModel: ItemResult, navController: NavController, position: 
     }
 }
 
-val Textdownload = listOf<SearchModel>(
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-
-
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-
-    SearchModel(
-        "https://budujemydom.pl/i/2019/07/22/212180-1671-1100x0-sc1x50188_wiertarki-rodzaje5-budujemydompl.jpg",
-        "test/test",
-        "test_____________________--------test",
-    ),
-)
-
 @Composable
 fun RawItem(navController: NavController, searchModel: ItemResult, position: Int) {
     Column(
@@ -211,7 +153,6 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
-//                        navController.navigate("Details")
                         navController.navigate("Details/${position}")
                     }
                     .height(245.dp)
@@ -230,9 +171,6 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
                         fontSize = 12.sp,
                     )
                 }
-
-
-
                 searchModel.title?.let {
                     Text(
                         text = it,
@@ -245,22 +183,7 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
         }
     }
 }
-@Composable
-fun BookCard(book:ItemResult){
-    Card(
-        modifier= Modifier
-            .padding(all = 16.dp)
-            .fillMaxWidth()
 
-    ) {
-        Column{
-            Text(text=book.title, fontSize= 18.sp)
-            Text(text=book.author, color = Color.Gray)
-            Text(text="Published in ${book.price}",color = Color.Gray)
-        }
-
-    }
-}
 
 
 

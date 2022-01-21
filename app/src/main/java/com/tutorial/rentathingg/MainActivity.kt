@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                                 MoneyScreen(navController)
                             }
                             composable("Home") {
-                                ProfilScreen(navController)
+                                ProfilScreen(navController, viewModel)
                             }
                            composable("Home") {
                                 HomeScreen(navController)
@@ -88,16 +88,3 @@ class MainActivity : ComponentActivity() {
         }
     }
 }
-
-
-@Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
-}
-
-//@Preview(showBackground = true)
-//@Composable
-//fun DefaultPreview() {
-//
-//
-//}
