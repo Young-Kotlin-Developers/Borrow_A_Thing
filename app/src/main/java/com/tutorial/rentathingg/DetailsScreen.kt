@@ -10,10 +10,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material.icons.filled.BookmarkBorder
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +48,7 @@ fun DetailsScreen(navController: NavController, itemViewModel: ItemViewModel, nu
                 TextContent(data)
             }
             item {
-                BottomNav()
+                BottomNav(navController)
             }
         }
     }
@@ -167,19 +164,18 @@ fun TopButton(imageVector: ImageVector, modifier: Modifier, clickListener: () ->
 }
 
 @Composable
-fun BottomNav() {
+fun BottomNav(navController: NavController) {
     Column(
         Modifier
             .fillMaxSize()
             .navigationBarsPadding()
             .padding(10.dp)
     ) {
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween
-        ) {
             Button(
-                onClick = {},
+                modifier = Modifier.fillMaxWidth(),
+                onClick = {
+                    navController.navigate("Money")
+                },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color(0xffEE4367),
                     contentColor = Color(0xFFFFF5EE),
@@ -187,29 +183,12 @@ fun BottomNav() {
                 shape = RoundedCornerShape(16.dp),
             ) {
                 Icon(
-                    Icons.Filled.Chat,
-                    contentDescription = "Email",
+                    Icons.Filled.Paid,
+                    contentDescription = "Borrow",
                     modifier = Modifier.size(ButtonDefaults.IconSize)
                 )
                 Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = "Message")
+                Text(text = "Borrow")
             }
-            Button(
-                onClick = { },
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0xffEE4367),
-                    contentColor = Color(0xFFFFF5EE),
-                ),
-                shape = RoundedCornerShape(16.dp),
-            ) {
-                Icon(
-                    Icons.Filled.Phone,
-                    contentDescription = "Phone",
-                    modifier = Modifier.size(ButtonDefaults.IconSize)
-                )
-                Spacer(Modifier.size(ButtonDefaults.IconSpacing))
-                Text(text = "Phone", color = Color.White)
-            }
-        }
     }
 }

@@ -1,5 +1,6 @@
 package com.tutorial.rentathingg
 
+import MoneyScreen
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -49,6 +50,12 @@ class MainActivity : ComponentActivity() {
                             }
                             composable("Register") {
                                 RegisterPage(navController)
+                            }
+                            composable("Money") {
+                                MoneyScreen(navController)
+                            }
+                            composable("Home") {
+                                ProfilScreen(navController)
                             }
                            composable("Home") {
                                 HomeScreen(navController)

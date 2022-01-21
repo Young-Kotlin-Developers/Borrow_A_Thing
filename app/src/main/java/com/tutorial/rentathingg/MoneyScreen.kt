@@ -13,7 +13,7 @@ import androidx.navigation.NavController
 
 
 @Composable
-fun ProfileScreen(navController: NavController) {
+fun MoneyScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -21,7 +21,7 @@ fun ProfileScreen(navController: NavController) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "Comming Soon",
+            text = "Zamówiłeś panienkę gratuluje",
             fontSize = MaterialTheme.typography.h3.fontSize,
             fontWeight = FontWeight.Bold,
             color = Color.White

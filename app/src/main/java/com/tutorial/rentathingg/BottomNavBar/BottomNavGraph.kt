@@ -1,6 +1,6 @@
 package com.tutorial.rentathingg.BottomNavBar
 
-import ProfileScreen
+import MoneyScreen
 import androidx.compose.runtime.Composable
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -23,10 +23,13 @@ fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
             OfferCreatorScreen(navController)
         }
         composable(route = BottomBarScreen.Profile.route) {
-            ProfileScreen(navController)
+            ProfilScreen(navController)
         }
         composable("Result") {
             SerchScreen(navController, viewModel)
+        }
+        composable("Money") {
+            MoneyScreen(navController)
         }
         composable(
             route = "Details/{colorName}",
