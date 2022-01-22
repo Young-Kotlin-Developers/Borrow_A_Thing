@@ -21,6 +21,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -37,146 +38,148 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun HomeScreen(navController: NavController) {
-    Box(modifier = Modifier
-        .background(Color.White)
-        .navigationBarsPadding()
-        .fillMaxSize()
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .navigationBarsPadding()
+            .fillMaxSize()
     ) {
-        Column {
+        Column(
+            horizontalAlignment = Alignment.CenterHorizontally,
+            modifier = Modifier
+                .fillMaxWidth()
+        ) {
             HeroSection()
             SearchSection(navController)
 
-            }
         }
+    }
 }
 
 
 @Composable
 fun HeroSection() {
-        Row(
-            horizontalArrangement = Arrangement.Center,
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = Modifier
+            .navigationBarsPadding()
+            .fillMaxWidth()
+    ) {
+        Column(
+            verticalArrangement = Arrangement.Center,
+            horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
-                .navigationBarsPadding()
                 .fillMaxWidth()
-        ){
-            Column(
-    //            verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-                modifier = Modifier
-                    .fillMaxWidth()
-            )
-            {
+        )
+        {
             BoxWithConstraints {
-//                if (maxWidth < 400.dp) {
-//                    Image(
-//                        painter = painterResource(R.drawable.sasiedzi),
-//                        contentDescription = "Hero picture",
-//                        contentScale = ContentScale.FillWidth,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(250.dp)
-//                    )
-//                } else {
-//                    Image(
-//                        painter = painterResource(R.drawable.sasiedzi),
-//                        contentDescription = "Hero picture",
-//                        contentScale = ContentScale.FillWidth,
-//                        modifier = Modifier
-//                            .fillMaxWidth()
-//                            .height(430.dp)
-//                    )
-//                }
+                if (maxWidth < 400.dp) {
+                    Image(
+                        painter = painterResource(R.drawable.sasiedzi),
+                        contentDescription = "Hero picture",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(250.dp)
+                    )
+                } else {
+                    Image(
+                        painter = painterResource(R.drawable.sasiedzi),
+                        contentDescription = "Hero picture",
+                        contentScale = ContentScale.FillWidth,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(430.dp)
+                    )
+                }
             }
-                Spacer(modifier = Modifier.height(10.dp))
-                Text(
-                    text= "Brakuje ci sprzętu?",
-    //                style = MaterialTheme.typography.h4,
-                    fontSize = 35.sp,
-                    fontWeight = FontWeight.Bold
-                )
-                Text(
-                    text= "Sąsiad ci pożyczy!",
-    //                style = MaterialTheme.typography.h4
-                    fontSize = 35.sp,
-                    fontWeight = FontWeight.Bold
-                )
-            }
+            Spacer(modifier = Modifier.height(10.dp))
+            Text(
+                text = "Do you lack equipment?",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.W500,
+                textAlign = TextAlign.Center
+            )
+            Text(
+                text = "The neighbor will lend you!",
+                fontSize = 30.sp,
+                fontWeight = FontWeight.W500,
+                textAlign = TextAlign.Center
+            )
         }
+    }
 
 }
 
-//@Preview
 @Composable
 fun SearchSection(navController: NavController) {
     val scaffoldState = rememberScaffoldState()
-    var itemFieldState by remember {
-        mutableStateOf("")
-    }
-    var categoryFieldState by remember {
-        mutableStateOf("")
-    }
+//    var itemFieldState by remember {
+//        mutableStateOf("")
+//    }
+//    var categoryFieldState by remember {
+//        mutableStateOf("")
+//    }
     val scope = rememberCoroutineScope()
 
     Scaffold(
         modifier = Modifier
             .fillMaxSize(),
         scaffoldState = scaffoldState
-    ){
+    ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
-//            horizontalAlignment = Alignment.Start,
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(20.dp))
-            Text(text = "Czego ci potrzeba?", style = MaterialTheme.typography.h5)
-            Spacer(modifier = Modifier.height(8.dp))
-            OutlinedTextField(
-                value = itemFieldState,
-                label = { Text(text = "Szukaj po nazwie...") },
-                onValueChange = { itemFieldState = it },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    if (itemFieldState.isNotBlank())
-                        IconButton(onClick = { itemFieldState = "" }) {
-                            Icon(imageVector = Icons.Filled.Clear, contentDescription = "")
-                        }
-                }
-            )
-            Spacer(modifier = Modifier.height(12.dp))
-            Text(text = "LUB")
-            Spacer(modifier = Modifier.height(12.dp))
-            OutlinedTextField(
-                value = categoryFieldState,
-                label = { Text(text = "Kategoria...") },
-                onValueChange = { categoryFieldState = it },
-                singleLine = true,
-                modifier = Modifier.fillMaxWidth(),
-                trailingIcon = {
-                    if (categoryFieldState.isNotBlank())
-                        IconButton(onClick = { categoryFieldState = "" }) {
-                            Icon(imageVector = Icons.Filled.Clear, contentDescription = "")
-                        }
-                }
-            )
-            Spacer(modifier = Modifier.height(20.dp))
+//            Spacer(modifier = Modifier.height(5.dp))
+//            Text(text = "Czego ci potrzeba?", style = MaterialTheme.typography.h5)
+//            Spacer(modifier = Modifier.height(8.dp))
+//            OutlinedTextField(
+//                value = itemFieldState,
+//                label = { Text(text = "Szukaj po nazwie...") },
+//                onValueChange = { itemFieldState = it },
+//                singleLine = true,
+//                modifier = Modifier.fillMaxWidth(),
+//                trailingIcon = {
+//                    if (itemFieldState.isNotBlank())
+//                        IconButton(onClick = { itemFieldState = "" }) {
+//                            Icon(imageVector = Icons.Filled.Clear, contentDescription = "")
+//                        }
+//                }
+//            )
+//            Spacer(modifier = Modifier.height(12.dp))
+//            Text(text = "LUB")
+//            Spacer(modifier = Modifier.height(12.dp))
+//            OutlinedTextField(
+//                value = categoryFieldState,
+//                label = { Text(text = "Kategoria...") },
+//                onValueChange = { categoryFieldState = it },
+//                singleLine = true,
+//                modifier = Modifier.fillMaxWidth(),
+//                trailingIcon = {
+//                    if (categoryFieldState.isNotBlank())
+//                        IconButton(onClick = { categoryFieldState = "" }) {
+//                            Icon(imageVector = Icons.Filled.Clear, contentDescription = "")
+//                        }
+//                }
+//            )
+//            Spacer(modifier = Modifier.height(20.dp))
             Button(
-                colors = ButtonDefaults.buttonColors(backgroundColor = MainColor, contentColor = Color.White),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = MainColor,
+                    contentColor = Color.White
+                ),
                 onClick = {
-
-                /* TODO Dodać wyszukiwanie wedlug wpisanych wartosci */
-                scope.launch {
-                    navController.navigate("Result"){
-
+                    scope.launch {
+                        navController.navigate("Result") {
+                        }
+//                    scaffoldState.snackbarHostState.showSnackbar("Item: $itemFieldState")
                     }
-                    scaffoldState.snackbarHostState.showSnackbar("Item: $itemFieldState")
-
-
-                }
-            }) {
-                Text("Szukaj", style = MaterialTheme.typography.h5)
+                }) {
+                Text("Search items", style = MaterialTheme.typography.h5)
             }
         }
     }
