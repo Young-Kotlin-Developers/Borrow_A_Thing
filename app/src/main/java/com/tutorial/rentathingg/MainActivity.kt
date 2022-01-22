@@ -56,7 +56,7 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(
                                     navArgument("TitleName") { type = NavType.IntType },
                                 )
-                            ){ backStackEntry ->
+                            ) { backStackEntry ->
                                 MoneyScreen(
                                     navController,
                                     viewModel,
@@ -66,11 +66,11 @@ class MainActivity : ComponentActivity() {
                             composable("Profile") {
                                 ProfilScreen(navController, viewModel)
                             }
-                           composable("Home") {
+                            composable("Home") {
                                 HomeScreen(navController)
-                           }
+                            }
                             composable("Result") {
-                                SerchScreen(navController,viewModel)
+                                SerchScreen(navController, viewModel)
                             }
                             composable("Offer") {
                                 OfferCreatorScreen(navController)
@@ -80,7 +80,7 @@ class MainActivity : ComponentActivity() {
                                 arguments = listOf(
                                     navArgument("colorName") { type = NavType.IntType },
                                 )
-                            ){ backStackEntry ->
+                            ) { backStackEntry ->
                                 DetailsScreen(
                                     navController,
                                     viewModel,

@@ -22,7 +22,7 @@ fun MainScreen(navController: NavHostController) {
             .navigationBarsPadding(),
         bottomBar = { BottomBar(navController = navController) }
     ) {
-        BottomNavGraph(navController = navController,viewModel = ItemViewModel())
+        BottomNavGraph(navController = navController, viewModel = ItemViewModel())
     }
 }
 

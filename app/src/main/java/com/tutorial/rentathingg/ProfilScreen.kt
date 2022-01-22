@@ -126,16 +126,8 @@ fun Down(navController: NavController, viewModel: ItemViewModel) {
             fontSize = 15.sp,
             color = Color.Black
         )
-
-//        LazyColumn(modifier = Modifier.fillMaxWidth()) {
-//            itemsIndexed(viewModel.books.value) { position, data ->
-//                myItems(searchModel = data, navController = navController, position)
-//            }
-                myItems(searchModel = viewModel.books.value[0], navController = navController, 0)
-                myItems(searchModel = viewModel.books.value[1], navController = navController, 1)
-                myItems(searchModel = viewModel.books.value[2], navController = navController, 2)
-//        }
-
+        myItems(searchModel = viewModel.books.value[0], navController = navController, 0)
+        myItems(searchModel = viewModel.books.value[1], navController = navController, 1)
         Spacer(modifier = Modifier.height(10.dp))
         TextButton(
             onClick = {},
@@ -183,9 +175,7 @@ fun myItems(searchModel: ItemResult, navController: NavController, position: Int
         )
 
         Spacer(modifier = Modifier.height(8.dp))
-
         Row() {
-
             searchModel.price?.let {
                 Text(
                     text = it,
@@ -193,11 +183,8 @@ fun myItems(searchModel: ItemResult, navController: NavController, position: Int
                     fontSize = 12.sp,
                 )
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
         }
-
         searchModel.title?.let {
             Text(
                 text = it,
@@ -206,7 +193,6 @@ fun myItems(searchModel: ItemResult, navController: NavController, position: Int
                 lineHeight = 24.sp
             )
         }
-
     }
 }
 
@@ -243,7 +229,6 @@ fun logout(navController: NavController) {
                 .fillMaxWidth()
         ) {
             Text(text = "Log out")
-
         }
         Divider(
             color = Color(0xFF000000),
@@ -252,5 +237,3 @@ fun logout(navController: NavController) {
         )
     }
 }
-
-

@@ -1,4 +1,3 @@
-
 import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -18,9 +17,9 @@ import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.ui.unit.dp
 
-fun usuwaniezbazydanych(id:String){
-    val query= FirebaseFirestore.getInstance().collection("items")
-    if(id!=null){
+fun usuwaniezbazydanych(id: String) {
+    val query = FirebaseFirestore.getInstance().collection("items")
+    if (id != null) {
         query.document(id).delete()
     }
 
@@ -28,13 +27,13 @@ fun usuwaniezbazydanych(id:String){
 }
 
 
-fun pobraniekonkretnychbazydanych(tytuldousuniecia:String?) {
+fun pobraniekonkretnychbazydanych(tytuldousuniecia: String?) {
     var id = ""
     val query = FirebaseFirestore.getInstance().collection("items")
     query.whereEqualTo("title", tytuldousuniecia).get().addOnSuccessListener { documents ->
         for (document in documents) {
             id = document.id
-            if(id!=""){
+            if (id != "") {
                 usuwaniezbazydanych(id)
                 break
             }
@@ -45,9 +44,9 @@ fun pobraniekonkretnychbazydanych(tytuldousuniecia:String?) {
 
 // text = "Gratuluje zamówienia ${myItem[number].title}"
 @Composable
-fun MoneyScreen(navController: NavController,itemViewModel:ItemViewModel,number:Int?) {
+fun MoneyScreen(navController: NavController, itemViewModel: ItemViewModel, number: Int?) {
     val myItem = listOf(itemViewModel.books.value[number!!])
-    Log.d("itemprzeslany",myItem.toString())
+    Log.d("itemprzeslany", myItem.toString())
 
     Column(
         modifier = Modifier
@@ -67,14 +66,14 @@ fun MoneyScreen(navController: NavController,itemViewModel:ItemViewModel,number:
                 .fillMaxWidth(),
 
             onClick = {
-                    var tytuldousuniecia=""
-                    for(document in myItem){
-                        tytuldousuniecia=document.title
-                    }
-                    navController.navigate("Home")
-                    pobraniekonkretnychbazydanych(tytuldousuniecia)
+                var tytuldousuniecia = ""
+                for (document in myItem) {
+                    tytuldousuniecia = document.title
+                }
+                navController.navigate("Home")
+                pobraniekonkretnychbazydanych(tytuldousuniecia)
 
-                      },
+            },
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color(0xffEE4367),
                 contentColor = Color(0xFFFFF5EE),

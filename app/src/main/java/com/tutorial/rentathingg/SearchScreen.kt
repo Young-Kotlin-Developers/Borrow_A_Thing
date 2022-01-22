@@ -48,51 +48,46 @@ import com.google.firebase.firestore.ktx.toObjects
 
 @SuppressLint("UnrememberedMutableState")
 @Composable
-fun SerchScreen(navController: NavController,viewmodel:ItemViewModel) {
-        Column(
+fun SerchScreen(navController: NavController, viewmodel: ItemViewModel) {
+    Column(
+    ) {
+        LazyRow(
+            contentPadding = PaddingValues(12.dp),
+            horizontalArrangement = Arrangement.spacedBy(12.dp)
         ) {
 
-            LazyRow(
-                contentPadding = PaddingValues(12.dp),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-
-                itemsIndexed(viewmodel.books.value) { position, data ->
-                    RawItem(searchModel = data, navController = navController, position = position)
-                }
+            itemsIndexed(viewmodel.books.value) { position, data ->
+                RawItem(searchModel = data, navController = navController, position = position)
             }
-
-            LazyColumn(modifier = Modifier.fillMaxWidth()) {
-
-                item {
-                    Text(
-                        text = "autka",
-                        color = Color.Black,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 14.sp,
-                        modifier = Modifier.padding(
-                            top = 20.dp,
-                            start = 16.dp,
-                            bottom = 16.dp
-                        ),
-                    )
-                }
-                itemsIndexed(viewmodel.books.value) { position, data ->
-                    SearchItem(searchModel = data, navController = navController, position)
-                }
+        }
+        LazyColumn(modifier = Modifier.fillMaxWidth()) {
+            item {
+                Text(
+                    text = "autka",
+                    color = Color.Black,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 14.sp,
+                    modifier = Modifier.padding(
+                        top = 20.dp,
+                        start = 16.dp,
+                        bottom = 16.dp
+                    ),
+                )
+            }
+            itemsIndexed(viewmodel.books.value) { position, data ->
+                SearchItem(searchModel = data, navController = navController, position)
             }
         }
     }
+}
 
 @Composable
 fun SearchItem(searchModel: ItemResult, navController: NavController, position: Int) {
-
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 16.dp, vertical = 8.dp)
     ) {
-
         Image(
             painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
             contentDescription = "",
@@ -105,11 +100,8 @@ fun SearchItem(searchModel: ItemResult, navController: NavController, position: 
                 .height(200.dp)
                 .fillMaxWidth()
         )
-
         Spacer(modifier = Modifier.height(8.dp))
-
         Row() {
-
             searchModel.price?.let {
                 Text(
                     text = it,
@@ -117,9 +109,7 @@ fun SearchItem(searchModel: ItemResult, navController: NavController, position: 
                     fontSize = 12.sp,
                 )
             }
-
             Spacer(modifier = Modifier.weight(1f))
-
         }
 
         searchModel.title?.let {
@@ -144,7 +134,6 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
             .clip(RoundedCornerShape(10.dp))
             .background(color = DarkGray)
     ) {
-
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -166,7 +155,6 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
                     .fillMaxSize()
                     .padding(2.dp)
             ) {
-
                 searchModel.price?.let {
                     Text(
                         text = it,
@@ -186,9 +174,3 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
         }
     }
 }
-
-
-
-
-
-

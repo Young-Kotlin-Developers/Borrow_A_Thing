@@ -45,6 +45,7 @@ import com.google.firebase.ktx.Firebase
 import com.google.firebase.storage.FirebaseStorage
 import com.google.firebase.storage.StorageMetadata
 import com.google.firebase.storage.ktx.storage
+import com.tutorial.rentathingg.BottomNavBar.BottomBarScreen
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -69,9 +70,20 @@ fun writeNewItem(
     imageUri: String,
     uploadDate: String
 ) {
-    val database= FirebaseFirestore.getInstance()
+    val database = FirebaseFirestore.getInstance()
     val item =
-        Item(title, category, details, description, phoneNum, price, author, authorId, imageUri, uploadDate)
+        Item(
+            title,
+            category,
+            details,
+            description,
+            phoneNum,
+            price,
+            author,
+            authorId,
+            imageUri,
+            uploadDate
+        )
     database.collection("items").add(item)
 
 }
@@ -85,10 +97,6 @@ fun OfferCreatorScreen(navController: NavController) {
     var phoneNumber = remember { TextFieldState() }
     var value = remember { TextFieldState() }
 
-    val isFormValid by derivedStateOf {
-        title.isNotBlank() && details.text.isNotBlank() && description.text.isNotBlank() && phoneNumber.text.length > 8 && value.text.length > 1
-    }
-
     val categoryItems = listOf("Tools", "Electronics", "Cars", "Books")
     var categoriesExpanded by remember { mutableStateOf(false) }
     var selectedIndex by remember { mutableStateOf(0) }
@@ -96,6 +104,13 @@ fun OfferCreatorScreen(navController: NavController) {
     val context = LocalContext.current
     var imageUri by remember { mutableStateOf<Uri?>(null) }
     val bitmap = remember { mutableStateOf<Bitmap?>(null) }
+
+    val isFormValid by derivedStateOf {
+        (title.isNotBlank() && details.text.isNotBlank() && description.text.isNotBlank()
+                && phoneNumber.text.length > 8 && value.text.length > 1)
+                && imageUri.toString() != "" && imageUri.toString().isNotBlank() && imageUri != null
+                && bitmap.toString().isNotBlank()
+    }
 
     val launcher =
         rememberLauncherForActivityResult(contract = ActivityResultContracts.GetContent()) { uri: Uri? ->
@@ -125,7 +140,7 @@ fun OfferCreatorScreen(navController: NavController) {
                         shape = RoundedCornerShape(90.dp),
                         colors = ButtonDefaults.buttonColors(backgroundColor = Color.White),
                         onClick = {
-                            //TODO: navController.navigate("home") - PODPIAC DO HOME
+                            navController.navigate("Home")
                         }
                     ) {
                         Icon(
@@ -211,8 +226,6 @@ fun OfferCreatorScreen(navController: NavController) {
                                     fontSize = 17.sp
                                 )
                                 Column {
-//                                    dropDownMenu()
-//                                    DropDownMenu(value = category) { category = it }
                                     ComposeMenu(
                                         menuItems = categoryItems,
                                         menuExpandedState = categoriesExpanded,
@@ -347,6 +360,7 @@ fun OfferCreatorScreen(navController: NavController) {
                                                                 fileName
                                                             )
                                                             if (progressDialog.isShowing) progressDialog.dismiss()
+                                                            navController.navigate("Home")
                                                         } else {
                                                             // Handle failures //
                                                             if (progressDialog.isShowing) progressDialog.dismiss()
@@ -407,9 +421,6 @@ fun ComposeMenu(
                 text = menuItems[seletedIndex],
                 modifier = Modifier
                     .fillMaxWidth(),
-//                trailingIcon = {
-//                    Icon(Icons.Filled.KeyboardArrowDown, "categories")
-//                }
             )
 
             Icon(
@@ -442,56 +453,6 @@ fun ComposeMenu(
     }
 }
 
-/*
-@Composable
-fun DropDownMenu(selectedText: String, onInputChanged: (String) -> Unit) {
-
-    var expanded by remember { mutableStateOf(false) }
-    val suggestions = listOf("Electronics", "Cars", "Tools")
-    var selectedText by remember { mutableStateOf("") }
-
-    var textfieldSize by remember { mutableStateOf(Size.Zero) }
-
-    val icon = if (expanded)
-        Icons.Filled.KeyboardArrowUp
-    else
-        Icons.Filled.KeyboardArrowDown
-
-    Column(Modifier.padding(0.dp)) {
-        OutlinedTextField(
-            value = selectedText,
-//            onValueChange = { selectedText = it },
-            onValueChange = onInputChanged,
-            singleLine = true,
-            modifier = Modifier
-                .fillMaxWidth()
-                .onGloballyPositioned { coordinates ->
-                    textfieldSize = coordinates.size.toSize()
-                },
-            trailingIcon = {
-                Icon(icon, "contentDescription",
-                    Modifier.clickable { expanded = !expanded })
-            }
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .width(with(LocalDensity.current) { textfieldSize.width.toDp() })
-        ) {
-            suggestions.forEach { label ->
-                DropdownMenuItem(onClick = {
-                    selectedText = label
-                    expanded = false
-                }) {
-                    Text(text = label)
-                }
-            }
-        }
-    }
-}
-
- */
 @Composable
 fun Description(description: TextFieldState = remember { TextFieldState() }) {
     val maxChar = 5000
@@ -612,6 +573,5 @@ fun Swich1() {
             )
         }
     }
-//    }
 }
 
