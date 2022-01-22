@@ -1,5 +1,6 @@
 package com.tutorial.rentathingg
 
+import android.content.ContentValues.TAG
 import android.util.Log
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
@@ -24,6 +25,9 @@ import androidx.navigation.NavController
 import com.google.accompanist.coil.rememberCoilPainter
 import com.google.accompanist.insets.navigationBarsPadding
 import com.google.accompanist.insets.statusBarsPadding
+import com.google.firebase.firestore.FirebaseFirestore
+
+
 
 @Composable
 fun DetailsScreen(navController: NavController, itemViewModel: ItemViewModel, number: Int?) {
@@ -35,20 +39,20 @@ fun DetailsScreen(navController: NavController, itemViewModel: ItemViewModel, nu
     var uploadDate by remember { mutableStateOf("") }
 
     val myItem = listOf(itemViewModel.books.value[number!!])
-
+    val myItem2= myItem
     Log.d("myItem", myItem.toString())
 
     Scaffold(backgroundColor = Color.White) {
         LazyColumn() {
-            itemsIndexed(myItem) {position, data->
+            itemsIndexed(myItem2) {position, data->
                 Photoadapter(navController, data.imageUri)
                 Infoproduct(data.uploadDate, data.title, data.price)
             }
-            itemsIndexed(myItem) { position, data ->
+            itemsIndexed(myItem2) { position, data ->
                 TextContent(data)
             }
-            item {
-                BottomNav(navController)
+            item{
+                BottomNav(navController,number,myItem2)
             }
         }
     }
@@ -164,7 +168,7 @@ fun TopButton(imageVector: ImageVector, modifier: Modifier, clickListener: () ->
 }
 
 @Composable
-fun BottomNav(navController: NavController) {
+fun BottomNav(navController: NavController, myNumber: Int?, myItem: List<ItemResult>) {
     Column(
         Modifier
             .fillMaxSize()
@@ -174,7 +178,7 @@ fun BottomNav(navController: NavController) {
             Button(
                 modifier = Modifier.fillMaxWidth(),
                 onClick = {
-                    navController.navigate("Money")
+                    navController.navigate("Money/${myNumber}")
                 },
                 colors = ButtonDefaults.buttonColors(
                     backgroundColor = Color(0xffEE4367),

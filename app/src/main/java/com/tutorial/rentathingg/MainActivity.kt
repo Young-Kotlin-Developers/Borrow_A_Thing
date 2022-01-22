@@ -51,10 +51,19 @@ class MainActivity : ComponentActivity() {
                             composable("Register") {
                                 RegisterPage(navController)
                             }
-                            composable("Money") {
-                                MoneyScreen(navController)
+                            composable(
+                                route = "Money/{TitleName}",
+                                arguments = listOf(
+                                    navArgument("TitleName") { type = NavType.IntType },
+                                )
+                            ){ backStackEntry ->
+                                MoneyScreen(
+                                    navController,
+                                    viewModel,
+                                    backStackEntry.arguments?.getInt("titleName")
+                                )
                             }
-                            composable("Home") {
+                            composable("Profile") {
                                 ProfilScreen(navController, viewModel)
                             }
                            composable("Home") {

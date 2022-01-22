@@ -28,8 +28,17 @@ fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
         composable("Result") {
             SerchScreen(navController, viewModel)
         }
-        composable("Money") {
-            MoneyScreen(navController)
+        composable(
+            route = "Money/{TitleName}",
+            arguments = listOf(
+                navArgument("TitleName") { type = NavType.IntType },
+            )
+        ){ backStackEntry ->
+            MoneyScreen(
+                navController,
+                viewModel,
+                backStackEntry.arguments?.getInt("titleName")
+            )
         }
         composable(
             route = "Details/{colorName}",
@@ -48,6 +57,9 @@ fun BottomNavGraph(navController: NavHostController,viewModel: ItemViewModel) {
         }
         composable("SigIn") {
             SignInScreen(navController)
+        }
+        composable("Profile") {
+            ProfilScreen(navController, viewModel)
         }
     }
 }

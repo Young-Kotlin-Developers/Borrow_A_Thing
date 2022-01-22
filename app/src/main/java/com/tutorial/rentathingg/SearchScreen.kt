@@ -2,6 +2,7 @@ package com.tutorial.rentathingg
 
 import android.annotation.SuppressLint
 import android.content.ContentValues.TAG
+import android.content.Intent
 import android.os.Handler
 import android.util.Log
 import androidx.activity.viewModels
@@ -40,6 +41,7 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.Card
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.core.content.ContextCompat.startActivity
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ktx.toObject
 import com.google.firebase.firestore.ktx.toObjects
@@ -49,6 +51,7 @@ import com.google.firebase.firestore.ktx.toObjects
 fun SerchScreen(navController: NavController,viewmodel:ItemViewModel) {
         Column(
         ) {
+
             LazyRow(
                 contentPadding = PaddingValues(12.dp),
                 horizontalArrangement = Arrangement.spacedBy(12.dp)

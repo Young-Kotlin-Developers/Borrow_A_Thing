@@ -1,6 +1,5 @@
 package com.tutorial.rentathingg.BottomNavBar
 
-import android.content.ClipData
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
