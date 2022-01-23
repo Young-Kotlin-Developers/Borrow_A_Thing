@@ -39,6 +39,8 @@ fun ProfilScreen(navController: NavController, viewmodel: ItemViewModel) {
 
     Scaffold(backgroundColor = Color.White) {
         LazyColumn(
+            modifier = Modifier
+                .navigationBarsPadding()
         ) {
             item {
                 Up(navController)

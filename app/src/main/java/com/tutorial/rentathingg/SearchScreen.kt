@@ -83,56 +83,13 @@ fun SerchScreen(navController: NavController, viewmodel: ItemViewModel) {
 
 @Composable
 fun SearchItem(searchModel: ItemResult, navController: NavController, position: Int) {
-    Column(
+    Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(horizontal = 16.dp, vertical = 8.dp)
-    ) {
-        Image(
-            painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
-            contentDescription = "",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .clip(RoundedCornerShape(8.dp))
-                .clickable {
-                    navController.navigate("Details/${position}")
-                }
-                .height(200.dp)
-                .fillMaxWidth()
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-        Row() {
-            searchModel.price?.let {
-                Text(
-                    text = it,
-                    fontWeight = FontWeight.Normal,
-                    fontSize = 12.sp,
-                )
-            }
-            Spacer(modifier = Modifier.weight(1f))
-        }
+            .padding(4.dp),
+        elevation =20.dp,
+        shape = RoundedCornerShape(10.dp)
 
-        searchModel.title?.let {
-            Text(
-                text = it,
-                fontWeight = FontWeight.SemiBold,
-                fontSize = 18.sp,
-                lineHeight = 24.sp
-            )
-        }
-
-    }
-}
-
-@Composable
-fun RawItem(navController: NavController, searchModel: ItemResult, position: Int) {
-    Column(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .padding(4.dp)
-            .clip(RoundedCornerShape(10.dp))
-            .background(color = DarkGray)
     ) {
         Column(
             modifier = Modifier
@@ -141,7 +98,58 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
             Image(
                 painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
                 contentDescription = "",
-                contentScale = ContentScale.Crop,
+                contentScale = ContentScale.FillBounds,
+                modifier = Modifier
+                    .clip(RoundedCornerShape(8.dp))
+                    .clickable {
+                        navController.navigate("Details/${position}")
+                    }
+                    .height(200.dp)
+                    .fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(8.dp))
+            Row() {
+                searchModel.price?.let {
+                    Text(
+                        text = it,
+                        fontWeight = FontWeight.Normal,
+                        fontSize = 12.sp,
+                    )
+                }
+                Spacer(modifier = Modifier.weight(1f))
+            }
+
+            searchModel.title?.let {
+                Text(
+                    text = it,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = 18.sp,
+                    lineHeight = 24.sp
+                )
+            }
+        }
+    }
+}
+
+@Composable
+fun RawItem(navController: NavController, searchModel: ItemResult, position: Int) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp)
+            .padding(4.dp),
+        elevation =20.dp,
+        shape = RoundedCornerShape(10.dp)
+
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+        ) {
+            Image(
+                painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
+                contentDescription = "",
+                contentScale = ContentScale.FillBounds,
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {

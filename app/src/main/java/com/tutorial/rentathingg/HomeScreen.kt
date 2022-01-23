@@ -41,13 +41,13 @@ fun HomeScreen(navController: NavController) {
     Box(
         modifier = Modifier
             .background(Color.White)
-            .navigationBarsPadding()
             .fillMaxSize()
     ) {
         Column(
             horizontalAlignment = Alignment.CenterHorizontally,
             modifier = Modifier
                 .fillMaxWidth()
+                .navigationBarsPadding()
         ) {
             HeroSection()
             SearchSection(navController)
@@ -56,14 +56,12 @@ fun HomeScreen(navController: NavController) {
     }
 }
 
-
 @Composable
 fun HeroSection() {
     Row(
         horizontalArrangement = Arrangement.Center,
         verticalAlignment = Alignment.CenterVertically,
         modifier = Modifier
-            .navigationBarsPadding()
             .fillMaxWidth()
     ) {
         Column(
