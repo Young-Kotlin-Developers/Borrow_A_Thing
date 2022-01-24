@@ -98,7 +98,7 @@ fun SearchItem(searchModel: ItemResult, navController: NavController, position: 
             Image(
                 painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
                 contentDescription = "",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
@@ -149,7 +149,7 @@ fun RawItem(navController: NavController, searchModel: ItemResult, position: Int
             Image(
                 painter = rememberCoilPainter(request = searchModel.imageUri, fadeIn = true),
                 contentDescription = "",
-                contentScale = ContentScale.FillBounds,
+                contentScale = ContentScale.Crop,
                 modifier = Modifier
                     .clip(RoundedCornerShape(8.dp))
                     .clickable {
